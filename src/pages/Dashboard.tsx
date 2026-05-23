@@ -42,6 +42,18 @@ const Dashboard: React.FC = () => {
   const [smallBusinessPageSize, setSmallBusinessPageSize] = useState(20);
   const [searchSmallBusinessName, setSearchSmallBusinessName] = useState('');
   
+  // 报警列表弹窗
+  const [showAlarmModal, setShowAlarmModal] = useState(false);
+  const [currentAlarmLevel, setCurrentAlarmLevel] = useState('');
+  const [alarmCurrentPage, setAlarmCurrentPage] = useState(1);
+  const [alarmPageSize, setAlarmPageSize] = useState(20);
+  const [searchAlarmNo, setSearchAlarmNo] = useState('');
+  const [searchDeviceName, setSearchDeviceName] = useState('');
+  const [searchAlarmStatus, setSearchAlarmStatus] = useState('');
+  const [searchAlarmType, setSearchAlarmType] = useState('');
+  const [searchStartDate, setSearchStartDate] = useState('');
+  const [searchEndDate, setSearchEndDate] = useState('');
+  
   const ageRanges = [
     { value: '', label: '全部年龄段' },
     { value: 'under12', label: '12岁以下' },
@@ -59,16 +71,21 @@ const Dashboard: React.FC = () => {
   const ageData = [
     { name: '12岁以下', value: 3934, color: '#14b8a6' },
     { name: '13~18岁', value: 2514, color: '#f59e0b' },
-    { name: '19~60岁', value: 32681, color: '#38bdf8' },
-    { name: '60~90岁', value: 5205, color: '#3b82f6' },
+    { name: '19~30岁', value: 8680, color: '#38bdf8' },
+    { name: '31~40岁', value: 7820, color: '#3b82f6' },
+    { name: '41~50岁', value: 7560, color: '#8b5cf6' },
+    { name: '51~60岁', value: 8621, color: '#ec4899' },
+    { name: '61~70岁', value: 2860, color: '#f97316' },
+    { name: '71~80岁', value: 1850, color: '#06b6d4' },
+    { name: '81~90岁', value: 495, color: '#84cc16' },
     { name: '91岁以上', value: 32, color: '#a855f7' },
   ];
 
   const alarmData = [
-    { count: 10, label: '红色报警', percent: '0.0%', total: 10, processed: 0, color: 'from-red-500 to-red-400' },
-    { count: 8640, label: '橙色报警', percent: '3.3%', total: 8640, processed: 122, color: 'from-orange-500 to-orange-400' },
-    { count: 10514, label: '黄色报警', percent: '4.0%', total: 10514, processed: 0, color: 'from-yellow-500 to-yellow-400' },
-    { count: 240642, label: '蓝色报警', percent: '92.6%', total: 240642, processed: 6, color: 'from-blue-500 to-blue-400' },
+    { count: 10, label: '红色报警', percent: '0.0%', total: 10, processed: 0, color: 'from-red-500 to-red-400', hoverTip: '红色报警需要实时处理' },
+    { count: 8640, label: '橙色报警', percent: '3.3%', total: 8640, processed: 122, color: 'from-orange-500 to-orange-400', hoverTip: '橙色报警4小时内处理' },
+    { count: 10514, label: '黄色报警', percent: '4.0%', total: 10514, processed: 0, color: 'from-yellow-500 to-yellow-400', hoverTip: '黄色报警一天内处理即可' },
+    { count: 240642, label: '蓝色报警', percent: '92.6%', total: 240642, processed: 6, color: 'from-blue-500 to-blue-400', hoverTip: '蓝色报警两天内处理即可' },
   ];
 
   const pendingAlarms = [
@@ -286,11 +303,23 @@ const Dashboard: React.FC = () => {
           {/* 报警统计卡片 */}
           <div className="grid grid-cols-4 gap-4 mb-4">
             {alarmData.map((item, idx) => (
-              <div key={idx} className={`bg-gradient-to-br ${item.color} rounded-lg p-4 text-white`}>
+              <div 
+                key={idx} 
+                className={`bg-gradient-to-br ${item.color} rounded-lg p-4 text-white cursor-pointer hover:shadow-lg transition-all relative group`}
+                onClick={() => {
+                  setCurrentAlarmLevel(item.label);
+                  setShowAlarmModal(true);
+                }}
+              >
                 <div className="text-3xl font-bold mb-1">{item.count}</div>
                 <div className="text-sm opacity-90 mb-3">{item.label}(占比: {item.percent})</div>
                 <div className="text-sm">总数：{item.total}</div>
                 <div className="text-sm">已处理数量：{item.processed}</div>
+                {/* 悬停提示 */}
+                <div className="absolute left-1/2 -translate-x-1/2 -top-12 bg-gray-800 text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                  {item.hoverTip}
+                  <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+                </div>
               </div>
             ))}
           </div>
@@ -303,7 +332,7 @@ const Dashboard: React.FC = () => {
                 <div className="text-xl font-bold text-gray-800">21.23 ℃</div>
                 <Info className="h-4 w-4 text-gray-400" />
               </div>
-              <div className="text-sm text-gray-600 mb-3">平均温度</div>
+              <div className="text-sm text-gray-600 mb-3">当前温度</div>
               <div className="text-sm text-gray-600">最高温度：<span className="text-red-500">▲ 33.00℃</span></div>
               <div className="text-sm text-gray-600">最低温度：<span className="text-teal-500">▼ 10.10℃</span></div>
             </div>
@@ -314,51 +343,89 @@ const Dashboard: React.FC = () => {
                 <div className="text-xl font-bold text-gray-800">66.34 %</div>
                 <Info className="h-4 w-4 text-gray-400" />
               </div>
-              <div className="text-sm text-gray-600 mb-3">平均湿度</div>
+              <div className="text-sm text-gray-600 mb-3">当前湿度</div>
               <div className="text-sm text-gray-600">最高湿度：<span className="text-red-500">▲ 94.80 %</span></div>
               <div className="text-sm text-gray-600">最低湿度：<span className="text-teal-500">▼ 22.30 %</span></div>
             </div>
 
-            {/* 喷淋平均水压 */}
-            <div className="bg-white rounded-lg p-4">
+            {/* 喷淋当前水压 */}
+            <div className="bg-white rounded-lg p-4 relative">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-xl font-bold text-gray-800">0.90 MPA</div>
-                <Info className="h-4 w-4 text-gray-400" />
+                <div className="relative group">
+                  <Info className="h-4 w-4 text-gray-400 cursor-help" />
+                  <div className="absolute right-0 top-6 w-48 bg-gray-800 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    <div className="space-y-1">
+                      <div>最高水压正常范围≤ 1.2 MPa</div>
+                      <div>最低水压正常范围≥ 0.05 MPa</div>
+                    </div>
+                    <div className="absolute -top-1.5 right-3 w-2 h-2 bg-gray-800 rotate-45"></div>
+                  </div>
+                </div>
               </div>
-              <div className="text-sm text-gray-600 mb-3">喷淋平均水压</div>
+              <div className="text-sm text-gray-600 mb-3">喷淋当前水压</div>
               <div className="text-sm text-gray-600">最高水压：<span className="text-red-500">▲ 1.11 MPA</span></div>
               <div className="text-sm text-gray-600">最低水压：<span className="text-teal-500">▼ 0.44 MPA</span></div>
             </div>
 
             {/* 雨量 */}
-            <div className="bg-white rounded-lg p-4">
+            <div className="bg-white rounded-lg p-4 relative">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-xl font-bold text-gray-800">- ML</div>
-                <Info className="h-4 w-4 text-gray-400" />
+                <div className="relative group">
+                  <Info className="h-4 w-4 text-gray-400 cursor-help" />
+                  <div className="absolute right-0 bottom-8 w-56 bg-gray-800 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    <div className="space-y-1">
+                      <div>微量降雨（零星小雨）：＜ 0.1 毫米</div>
+                      <div>小雨：0.1 – 9.9 毫米</div>
+                      <div>中雨：10.0 – 24.9 毫米</div>
+                      <div>大雨：25.0 – 49.9 毫米</div>
+                      <div>暴雨：50.0 – 99.9 毫米</div>
+                      <div>大暴雨：100.0 – 249.9 毫米</div>
+                      <div>特大暴雨：≥ 250.0 毫米</div>
+                    </div>
+                    <div className="absolute -bottom-1.5 right-3 w-2 h-2 bg-gray-800 rotate-45"></div>
+                  </div>
+                </div>
               </div>
-              <div className="text-sm text-gray-600 mb-3">平均雨量</div>
+              <div className="text-sm text-gray-600 mb-3">当前雨量</div>
               <div className="text-sm text-gray-600">最高雨量：<span className="text-red-500">▲ - ML</span></div>
               <div className="text-sm text-gray-600">最低雨量：<span className="text-teal-500">▼ - ML</span></div>
             </div>
 
             {/* 风速 */}
-            <div className="bg-white rounded-lg p-4">
+            <div className="bg-white rounded-lg p-4 relative">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-xl font-bold text-gray-800">1.38 m/s</div>
-                <Info className="h-4 w-4 text-gray-400" />
+                <div className="relative group">
+                  <Info className="h-4 w-4 text-gray-400 cursor-help" />
+                  <div className="absolute right-0 bottom-8 w-36 bg-gray-800 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    <div>正常范围0~7.9 米/秒</div>
+                    <div className="absolute -bottom-1.5 right-3 w-2 h-2 bg-gray-800 rotate-45"></div>
+                  </div>
+                </div>
               </div>
-              <div className="text-sm text-gray-600 mb-3">平均风速</div>
+              <div className="text-sm text-gray-600 mb-3">当前风速</div>
               <div className="text-sm text-gray-600">最高风速：<span className="text-red-500">▲ 2.60 m/s</span></div>
               <div className="text-sm text-gray-600">最低风速：<span className="text-teal-500">▼ 0.00 m/s</span></div>
             </div>
 
-            {/* 消防栓平均水压 */}
-            <div className="bg-white rounded-lg p-4">
+            {/* 消防栓当前水压 */}
+            <div className="bg-white rounded-lg p-4 relative">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-xl font-bold text-gray-800">0.37 MPA</div>
-                <Info className="h-4 w-4 text-gray-400" />
+                <div className="relative group">
+                  <Info className="h-4 w-4 text-gray-400 cursor-help" />
+                  <div className="absolute right-0 top-6 w-48 bg-gray-800 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    <div className="space-y-1">
+                      <div>最高水压正常范围≤ 0.65 MPa</div>
+                      <div>最低水压正常范围≥ 0.35 MPa</div>
+                    </div>
+                    <div className="absolute -top-1.5 right-3 w-2 h-2 bg-gray-800 rotate-45"></div>
+                  </div>
+                </div>
               </div>
-              <div className="text-sm text-gray-600 mb-3">消防栓平均水压</div>
+              <div className="text-sm text-gray-600 mb-3">消防栓当前水压</div>
               <div className="text-sm text-gray-600">最高水压：<span className="text-red-500">▲ 0.74 MPA</span></div>
               <div className="text-sm text-gray-600">最低水压：<span className="text-teal-500">▼ 0.00 MPA</span></div>
             </div>
@@ -1283,6 +1350,180 @@ const Dashboard: React.FC = () => {
               <button 
                 className="px-6 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
                 onClick={() => setShowSmallBusinessModal(false)}
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* 报警列表弹窗 */}
+      {showAlarmModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-[1100px] max-h-[85vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+              <h3 className="text-lg font-bold text-gray-800">{currentAlarmLevel}列表</h3>
+              <button 
+                className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
+                onClick={() => setShowAlarmModal(false)}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              {/* 搜索区域 */}
+              <div className="flex flex-wrap gap-4 mb-4 justify-start">
+                <div className="w-44">
+                  <label className="block text-sm text-gray-600 mb-1">报警单号</label>
+                  <input
+                    type="text"
+                    placeholder="请输入报警单号"
+                    value={searchAlarmNo}
+                    onChange={(e) => setSearchAlarmNo(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  />
+                </div>
+                <div className="w-44">
+                  <label className="block text-sm text-gray-600 mb-1">设备名称</label>
+                  <input
+                    type="text"
+                    placeholder="请输入设备名称"
+                    value={searchDeviceName}
+                    onChange={(e) => setSearchDeviceName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  />
+                </div>
+                <div className="w-44">
+                  <label className="block text-sm text-gray-600 mb-1">报警状态</label>
+                  <select
+                    value={searchAlarmStatus}
+                    onChange={(e) => setSearchAlarmStatus(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="">全部状态</option>
+                    <option value="alarming">报警中</option>
+                    <option value="handled">已处理</option>
+                  </select>
+                </div>
+                <div className="w-44">
+                  <label className="block text-sm text-gray-600 mb-1">报警类型</label>
+                  <select
+                    value={searchAlarmType}
+                    onChange={(e) => setSearchAlarmType(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="">全部类型</option>
+                    <option value="arc">故障电弧报警</option>
+                    <option value="offline">用电设备离线</option>
+                  </select>
+                </div>
+                <div className="w-56">
+                  <label className="block text-sm text-gray-600 mb-1">报警时间</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="date"
+                      value={searchStartDate}
+                      onChange={(e) => setSearchStartDate(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                    <span className="text-gray-400 text-sm">至</span>
+                    <input
+                      type="date"
+                      value={searchEndDate}
+                      onChange={(e) => setSearchEndDate(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="overflow-x-auto border rounded">
+                <table className="w-full min-w-[1000px]">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 min-w-[60px]">序号</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 min-w-[120px]">报警单号</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 min-w-[120px]">设备名称</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 min-w-[130px]">报警类型</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 min-w-[80px]">设备类型</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 min-w-[80px]">报警状态</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 min-w-[120px]">报警地址</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 min-w-[120px]">报警时间</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 min-w-[80px]">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...Array(10)].map((_, idx) => (
+                      <tr key={idx} className={idx % 2 === 1 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200 whitespace-nowrap">{idx + 1}</td>
+                        <td className="px-4 py-3 text-sm text-gray-800 border-b border-gray-200 whitespace-nowrap">2026052100267...</td>
+                        <td className="px-4 py-3 text-sm text-gray-800 border-b border-gray-200 whitespace-nowrap">南光村59号{300 + idx}室</td>
+                        <td className="px-4 py-3 text-sm text-gray-800 border-b border-gray-200 whitespace-nowrap">用电设备离线报警</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200 whitespace-nowrap">用电</td>
+                        <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">
+                          <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded">报警中</span>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200 whitespace-nowrap">南光村59号{300 + idx}室</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200 whitespace-nowrap">2026-05-21 18:XX:XX</td>
+                        <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">
+                          <button className="text-red-600 hover:underline text-sm mr-2">处理</button>
+                          <button className="text-blue-600 hover:underline text-sm">详情</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              {/* 分页 */}
+              <div className="flex items-center justify-end gap-3 mt-4">
+                <span className="text-sm text-gray-600">共 {currentAlarmLevel === '红色报警' ? '10' : currentAlarmLevel === '橙色报警' ? '8640' : currentAlarmLevel === '黄色报警' ? '10514' : '240642'} 条</span>
+                <select
+                  value={alarmPageSize}
+                  onChange={(e) => setAlarmPageSize(Number(e.target.value))}
+                  className="px-3 py-1.5 border border-gray-300 rounded text-sm"
+                >
+                  <option value={10}>10条/页</option>
+                  <option value={20}>20条/页</option>
+                  <option value={50}>50条/页</option>
+                  <option value={100}>100条/页</option>
+                </select>
+                <div className="flex items-center gap-1">
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                    &lt;
+                  </button>
+                  {[1, 2, 3, 4, 5, '...', 100].map((page, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => typeof page === 'number' && setAlarmCurrentPage(page)}
+                      className={`px-3 py-1 rounded text-sm ${
+                        page === alarmCurrentPage
+                          ? 'bg-blue-500 text-white'
+                          : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                    &gt;
+                  </button>
+                </div>
+                <span className="text-sm text-gray-600">前往</span>
+                <input
+                  type="number"
+                  value={alarmCurrentPage}
+                  onChange={(e) => setAlarmCurrentPage(Number(e.target.value))}
+                  className="w-14 px-2 py-1.5 border border-gray-300 rounded text-sm text-center"
+                />
+                <span className="text-sm text-gray-600">页</span>
+              </div>
+            </div>
+            <div className="flex justify-end p-4 border-t border-gray-200 flex-shrink-0">
+              <button 
+                className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                onClick={() => setShowAlarmModal(false)}
               >
                 确定
               </button>
