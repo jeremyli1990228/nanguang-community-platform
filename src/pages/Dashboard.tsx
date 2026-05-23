@@ -30,6 +30,12 @@ const Dashboard: React.FC = () => {
   const [searchName, setSearchName] = useState('');
   const [searchAgeRange, setSearchAgeRange] = useState('');
   
+  // 法人单位列表弹窗
+  const [showEnterpriseModal, setShowEnterpriseModal] = useState(false);
+  const [enterpriseCurrentPage, setEnterpriseCurrentPage] = useState(1);
+  const [enterprisePageSize, setEnterprisePageSize] = useState(20);
+  const [searchEnterpriseName, setSearchEnterpriseName] = useState('');
+  
   const ageRanges = [
     { value: '', label: '全部年龄段' },
     { value: 'under12', label: '12岁以下' },
@@ -224,7 +230,10 @@ const Dashboard: React.FC = () => {
 
           {/* 法人单位和三小场所 */}
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-blue-50 rounded-lg p-4 flex items-center justify-between">
+            <div 
+              className="bg-blue-50 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-blue-100 hover:shadow-sm transition-all"
+              onClick={() => setShowEnterpriseModal(true)}
+            >
               <div>
                 <div className="text-xl font-bold text-gray-800">2304</div>
                 <div className="text-sm text-gray-600 mt-1">法人单位（家）</div>
@@ -991,6 +1000,137 @@ const Dashboard: React.FC = () => {
               <button 
                 className="px-6 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
                 onClick={() => setShowNonHukouModal(false)}
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* 法人单位列表弹窗 */}
+      {showEnterpriseModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-[900px] max-h-[85vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+              <h3 className="text-lg font-bold text-gray-800">法人单位列表</h3>
+              <button 
+                className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
+                onClick={() => setShowEnterpriseModal(false)}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              {/* 搜索区域 */}
+              <div className="flex gap-4 mb-4 justify-start">
+                <div className="w-48">
+                  <label className="block text-sm text-gray-600 mb-1">企业名称</label>
+                  <input
+                    type="text"
+                    placeholder="请输入企业名称"
+                    value={searchEnterpriseName}
+                    onChange={(e) => setSearchEnterpriseName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              
+              <div className="overflow-x-auto border rounded">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">序号</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">企业名称</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">法人代表</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">联系电话</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">地址</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">楼栋名称</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">成立日期</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { id: 1, name: '俊逸', legalRep: '兰立红', phone: '189****4619', address: '深圳市南山区蛇...', building: '南光路156-1', establishDate: '2017-04-10' },
+                      { id: 2, name: '自然之声助听器', legalRep: '杜巧梅', phone: '176****3070', address: '山东省日照市莒...', building: '海王大厦A座', establishDate: '2022-08-15' },
+                      { id: 3, name: 'dyna', legalRep: '-', phone: '-', address: '-', building: '海王大厦A座', establishDate: '-' },
+                      { id: 4, name: '同步齿科', legalRep: '侯雪川', phone: '075****4671', address: '深圳市南山区南...', building: '海王大厦A座', establishDate: '2015-09-08' },
+                      { id: 5, name: '东熙明白发转黑', legalRep: '马艺平', phone: '186****4646', address: '辽阳市文圣区三...', building: '海王大厦A座', establishDate: '2012-05-15' },
+                      { id: 6, name: '优乐音乐世界', legalRep: '-', phone: '-', address: '-', building: '海王大厦A座', establishDate: '-' },
+                      { id: 7, name: 'y-y拳道能', legalRep: '-', phone: '-', address: '-', building: '海王大厦A座', establishDate: '-' },
+                      { id: 8, name: '深圳市得禧文化科...', legalRep: '胡珊珊', phone: '158****8028', address: '深圳市南山区南...', building: '海王大厦A座', establishDate: '2016-12-26' },
+                      { id: 9, name: '海王大元草', legalRep: '许薇', phone: '075****2709', address: '深圳市南山区南...', building: '海王大厦A座', establishDate: '2020-05-22' },
+                      { id: 10, name: '信睿维思德', legalRep: '许艳红', phone: '138****4353', address: '深圳市南山区南...', building: '海王大厦A座', establishDate: '2011-02-16' },
+                      { id: 11, name: '菲拜斯特贸易（深...', legalRep: 'EVSEEVA NATALIA', phone: '-', address: '深圳市南山区南...', building: '海王大厦A座', establishDate: '2020-03-27' },
+                      { id: 12, name: '证券事务', legalRep: '丁瑞鸣', phone: '-', address: '成都市*******', building: '海王大厦A座', establishDate: '1993-09-22' },
+                      { id: 13, name: '太洋电机产业株式...', legalRep: '苏德强', phone: '-', address: '深圳市南山区南...', building: '海王大厦A座', establishDate: '2009-07-02' },
+                      { id: 14, name: '深圳厚德载福美好...', legalRep: '陈明新', phone: '-', address: '深圳市南山区南...', building: '海王大厦A座', establishDate: '2023-03-15' },
+                      { id: 15, name: '鲲鹏顾问', legalRep: '-', phone: '-', address: '-', building: '海王大厦A座', establishDate: '-' },
+                      { id: 16, name: '福加德面粉工业深...', legalRep: '-', phone: '-', address: '-', building: '海王大厦A座', establishDate: '-' },
+                      { id: 17, name: '深圳市康健顺国际...', legalRep: '白冰川', phone: '189****5189', address: '深圳市南山区南...', building: '海王大厦A座', establishDate: '2017-01-05' },
+                    ].map((item, idx) => (
+                      <tr key={item.id} className={idx % 2 === 1 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{idx + 1}</td>
+                        <td className="px-4 py-3 text-sm text-gray-800 border-b border-gray-200">{item.name}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.legalRep}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.phone}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.address}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.building}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.establishDate}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              {/* 分页 */}
+              <div className="flex items-center justify-end gap-3 mt-4">
+                <span className="text-sm text-gray-600">共 2304 条</span>
+                <select
+                  value={enterprisePageSize}
+                  onChange={(e) => setEnterprisePageSize(Number(e.target.value))}
+                  className="px-3 py-1.5 border border-gray-300 rounded text-sm"
+                >
+                  <option value={10}>10条/页</option>
+                  <option value={20}>20条/页</option>
+                  <option value={50}>50条/页</option>
+                  <option value={100}>100条/页</option>
+                </select>
+                <div className="flex items-center gap-1">
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                    &lt;
+                  </button>
+                  {[1, 2, 3, 4, 5, '...', 116].map((page, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => typeof page === 'number' && setEnterpriseCurrentPage(page)}
+                      className={`px-3 py-1 rounded text-sm ${
+                        page === enterpriseCurrentPage
+                          ? 'bg-blue-500 text-white'
+                          : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                    &gt;
+                  </button>
+                </div>
+                <span className="text-sm text-gray-600">前往</span>
+                <input
+                  type="number"
+                  value={enterpriseCurrentPage}
+                  onChange={(e) => setEnterpriseCurrentPage(Number(e.target.value))}
+                  className="w-14 px-2 py-1.5 border border-gray-300 rounded text-sm text-center"
+                />
+                <span className="text-sm text-gray-600">页</span>
+              </div>
+            </div>
+            <div className="flex justify-end p-4 border-t border-gray-200 flex-shrink-0">
+              <button 
+                className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                onClick={() => setShowEnterpriseModal(false)}
               >
                 确定
               </button>
