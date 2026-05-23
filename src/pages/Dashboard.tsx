@@ -10,6 +10,11 @@ const Dashboard: React.FC = () => {
   const [processResult, setProcessResult] = useState('');
   const [processDescription, setProcessDescription] = useState('');
   const [attachmentPath, setAttachmentPath] = useState('');
+  
+  // 总人口列表弹窗
+  const [showPopulationModal, setShowPopulationModal] = useState(false);
+  const [populationCurrentPage, setPopulationCurrentPage] = useState(1);
+  const [populationPageSize, setPopulationPageSize] = useState(20);
 
   const ageData = [
     { name: '12岁以下', value: 3934, color: '#14b8a6' },
@@ -91,6 +96,26 @@ const Dashboard: React.FC = () => {
     { name: '邹亚锋', bloodPressure: '-', heartRate: '-', steps: '-' },
   ];
 
+  const populationData = [
+    { id: 1, name: '戚道琳', phone: '181****1215', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '高龄老人' },
+    { id: 2, name: '陈稳豪', phone: '186****2244', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 3, name: '李振龙', phone: '188****0039', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 4, name: '李小春', phone: '156****1080', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 5, name: '杨春雨', phone: '158****5434', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 6, name: '邓华龙', phone: '157****6984', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 7, name: '张亚飞', phone: '187****5102', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 8, name: '杨文杰', phone: '178****5063', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 9, name: '庄小娥', phone: '136****8271', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 10, name: '管庆锦', phone: '138****8764', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 11, name: '刘倚文', phone: '159****6645', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 12, name: '张文', phone: '152****8240', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 13, name: '王柱柱', phone: '187****7115', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 14, name: '李佳鹏', phone: '152****0128', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 15, name: '张宁', phone: '187****5686', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户' },
+    { id: 16, name: '张溢航', phone: '186****8806', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '满族', type: '普通住户' },
+    { id: 17, name: '佟力男', phone: '135****3049', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '满族', type: '普通住户' },
+  ];
+
   return (
     <div className="flex h-full">
       {/* 左侧栏：社区信息一览 */}
@@ -109,7 +134,10 @@ const Dashboard: React.FC = () => {
 
           {/* 人口统计 */}
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="text-center">
+            <div 
+              className="text-center cursor-pointer hover:bg-blue-50 p-3 rounded-lg hover:shadow-sm transition-all border border-transparent hover:border-blue-200"
+              onClick={() => setShowPopulationModal(true)}
+            >
               <div className="text-2xl font-bold text-gray-800">43928</div>
               <div className="text-sm text-gray-600 mt-1">总人口(人)</div>
             </div>
@@ -553,6 +581,105 @@ const Dashboard: React.FC = () => {
                 onClick={handleSaveProcess}
               >
                 保存
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 总人口列表弹窗 */}
+      {showPopulationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-[900px] max-h-[85vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+              <h3 className="text-lg font-bold text-gray-800">总人口列表</h3>
+              <button 
+                className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
+                onClick={() => setShowPopulationModal(false)}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              <div className="overflow-x-auto border rounded">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">序号</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">姓名</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">联系方式</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">性别</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">居住地址</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">民族</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">人员类型</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {populationData.map((item, idx) => (
+                      <tr key={item.id} className={idx % 2 === 1 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{idx + 1}</td>
+                        <td className="px-4 py-3 text-sm text-gray-800 border-b border-gray-200">{item.name}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.phone}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.gender}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.address}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.nation}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.type}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              {/* 分页 */}
+              <div className="flex items-center justify-end gap-3 mt-4">
+                <span className="text-sm text-gray-600">共 43928 条</span>
+                <select
+                  value={populationPageSize}
+                  onChange={(e) => setPopulationPageSize(Number(e.target.value))}
+                  className="px-3 py-1.5 border border-gray-300 rounded text-sm"
+                >
+                  <option value={10}>10条/页</option>
+                  <option value={20}>20条/页</option>
+                  <option value={50}>50条/页</option>
+                  <option value={100}>100条/页</option>
+                </select>
+                <div className="flex items-center gap-1">
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                    &lt;
+                  </button>
+                  {[1, 2, 3, 4, 5, '...', 2197].map((page, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => typeof page === 'number' && setPopulationCurrentPage(page)}
+                      className={`px-3 py-1 rounded text-sm ${
+                        page === populationCurrentPage
+                          ? 'bg-blue-500 text-white'
+                          : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                    &gt;
+                  </button>
+                </div>
+                <span className="text-sm text-gray-600">前往</span>
+                <input
+                  type="number"
+                  value={populationCurrentPage}
+                  onChange={(e) => setPopulationCurrentPage(Number(e.target.value))}
+                  className="w-14 px-2 py-1.5 border border-gray-300 rounded text-sm text-center"
+                />
+                <span className="text-sm text-gray-600">页</span>
+              </div>
+            </div>
+            <div className="flex justify-end p-4 border-t border-gray-200 flex-shrink-0">
+              <button 
+                className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                onClick={() => setShowPopulationModal(false)}
+              >
+                确定
               </button>
             </div>
           </div>
