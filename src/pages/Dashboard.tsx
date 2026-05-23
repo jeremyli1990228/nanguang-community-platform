@@ -639,8 +639,8 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="flex-1 overflow-auto p-4">
               {/* 搜索区域 */}
-              <div className="flex gap-4 mb-4">
-                <div className="flex-1">
+              <div className="flex gap-4 mb-4 justify-start">
+                <div className="w-48">
                   <label className="block text-sm text-gray-600 mb-1">姓名</label>
                   <input
                     type="text"
@@ -764,8 +764,8 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="flex-1 overflow-auto p-4">
               {/* 搜索区域 */}
-              <div className="flex gap-4 mb-4">
-                <div className="flex-1">
+              <div className="flex gap-4 mb-4 justify-start">
+                <div className="w-48">
                   <label className="block text-sm text-gray-600 mb-1">姓名</label>
                   <input
                     type="text"
@@ -889,8 +889,8 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="flex-1 overflow-auto p-4">
               {/* 搜索区域 */}
-              <div className="flex gap-4 mb-4">
-                <div className="flex-1">
+              <div className="flex gap-4 mb-4 justify-start">
+                <div className="w-48">
                   <label className="block text-sm text-gray-600 mb-1">姓名</label>
                   <input
                     type="text"
