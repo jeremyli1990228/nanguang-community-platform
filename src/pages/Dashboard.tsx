@@ -20,6 +20,11 @@ const Dashboard: React.FC = () => {
   const [showHukouModal, setShowHukouModal] = useState(false);
   const [hukouCurrentPage, setHukouCurrentPage] = useState(1);
   const [hukouPageSize, setHukouPageSize] = useState(20);
+  
+  // 非户籍人口列表弹窗
+  const [showNonHukouModal, setShowNonHukouModal] = useState(false);
+  const [nonHukouCurrentPage, setNonHukouCurrentPage] = useState(1);
+  const [nonHukouPageSize, setNonHukouPageSize] = useState(20);
 
   const ageData = [
     { name: '12岁以下', value: 3934, color: '#14b8a6' },
@@ -122,6 +127,7 @@ const Dashboard: React.FC = () => {
   ];
   
   const hukouData = populationData.filter(item => item.isShenzhenHukou);
+  const nonHukouData = populationData.filter(item => !item.isShenzhenHukou);
 
   return (
     <div className="flex h-full">
@@ -155,7 +161,10 @@ const Dashboard: React.FC = () => {
               <div className="text-2xl font-bold text-gray-800">17524</div>
               <div className="text-sm text-gray-600 mt-1">户籍人口(人)</div>
             </div>
-            <div className="text-center">
+            <div 
+              className="text-center cursor-pointer hover:bg-purple-50 p-3 rounded-lg hover:shadow-sm transition-all border border-transparent hover:border-purple-200"
+              onClick={() => setShowNonHukouModal(true)}
+            >
               <div className="text-2xl font-bold text-gray-800">26404</div>
               <div className="text-sm text-gray-600 mt-1">非户籍人口(人)</div>
             </div>
@@ -787,6 +796,105 @@ const Dashboard: React.FC = () => {
               <button 
                 className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                 onClick={() => setShowHukouModal(false)}
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* 非户籍人口列表弹窗 */}
+      {showNonHukouModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-[900px] max-h-[85vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+              <h3 className="text-lg font-bold text-gray-800">非户籍人口列表（非深圳户口）</h3>
+              <button 
+                className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
+                onClick={() => setShowNonHukouModal(false)}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              <div className="overflow-x-auto border rounded">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">序号</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">姓名</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">联系方式</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">性别</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">居住地址</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">民族</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">人员类型</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {nonHukouData.map((item, idx) => (
+                      <tr key={item.id} className={idx % 2 === 1 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{idx + 1}</td>
+                        <td className="px-4 py-3 text-sm text-gray-800 border-b border-gray-200">{item.name}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.phone}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.gender}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.address}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.nation}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.type}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              {/* 分页 */}
+              <div className="flex items-center justify-end gap-3 mt-4">
+                <span className="text-sm text-gray-600">共 26404 条</span>
+                <select
+                  value={nonHukouPageSize}
+                  onChange={(e) => setNonHukouPageSize(Number(e.target.value))}
+                  className="px-3 py-1.5 border border-gray-300 rounded text-sm"
+                >
+                  <option value={10}>10条/页</option>
+                  <option value={20}>20条/页</option>
+                  <option value={50}>50条/页</option>
+                  <option value={100}>100条/页</option>
+                </select>
+                <div className="flex items-center gap-1">
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                    &lt;
+                  </button>
+                  {[1, 2, 3, 4, 5, '...', 1321].map((page, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => typeof page === 'number' && setNonHukouCurrentPage(page)}
+                      className={`px-3 py-1 rounded text-sm ${
+                        page === nonHukouCurrentPage
+                          ? 'bg-purple-500 text-white'
+                          : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                    &gt;
+                  </button>
+                </div>
+                <span className="text-sm text-gray-600">前往</span>
+                <input
+                  type="number"
+                  value={nonHukouCurrentPage}
+                  onChange={(e) => setNonHukouCurrentPage(Number(e.target.value))}
+                  className="w-14 px-2 py-1.5 border border-gray-300 rounded text-sm text-center"
+                />
+                <span className="text-sm text-gray-600">页</span>
+              </div>
+            </div>
+            <div className="flex justify-end p-4 border-t border-gray-200 flex-shrink-0">
+              <button 
+                className="px-6 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+                onClick={() => setShowNonHukouModal(false)}
               >
                 确定
               </button>
