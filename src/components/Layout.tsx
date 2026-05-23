@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { UserCircle, HeartPulse, ChevronRight, Users, Building2, MapPin, Settings, Activity, BookOpen, Eye, EyeOff } from 'lucide-react';
-import { useAnnotation } from '../contexts/AnnotationContext';
-import AnnotationWrapper from './AnnotationWrapper';
+import { UserCircle, HeartPulse, ChevronRight, Users, Building2, MapPin, Settings, Activity, BookOpen } from 'lucide-react';
 
 const Layout: React.FC = () => {
   const location = useLocation();
-  const { isAnnotationMode, toggleAnnotationMode } = useAnnotation();
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set(['组织权限', '系统管理', '长者健康数据']));
 
   const topNavItems = [
@@ -219,33 +216,23 @@ const Layout: React.FC = () => {
           <div className="text-lg font-medium">南光社区治理平台</div>
         </div>
         
-        <AnnotationWrapper id={2}>
-          <nav className="flex gap-8">
-            {topNavItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`px-3 py-1 rounded transition-colors ${
-                  isTopNavActive(item.path)
-                    ? 'bg-white bg-opacity-20 font-medium'
-                    : 'hover:bg-white bg-opacity-10'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </AnnotationWrapper>
+        <nav className="flex gap-8">
+          {topNavItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`px-3 py-1 rounded transition-colors ${
+                isTopNavActive(item.path)
+                  ? 'bg-white bg-opacity-20 font-medium'
+                  : 'hover:bg-white bg-opacity-10'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={toggleAnnotationMode}
-            className="flex items-center gap-1 px-3 py-1 rounded bg-white/20 hover:bg-white/30 text-white text-sm transition-colors"
-            title={isAnnotationMode ? "关闭标注模式" : "打开标注模式"}
-          >
-            {isAnnotationMode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            {isAnnotationMode ? "标注中" : "标注模式"}
-          </button>
           <span className="text-sm">南光社区</span>
           <div className="h-8 w-8 bg-white rounded-full flex items-center justify-center">
             <UserCircle className="h-6 w-6 text-blue-500" />
@@ -257,9 +244,8 @@ const Layout: React.FC = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* 左侧侧边栏 */}
         {showSidebar && (
-          <AnnotationWrapper id={3}>
-            <aside className="w-48 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto">
-              <nav className="py-2">
+          <aside className="w-48 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto">
+            <nav className="py-2">
               {sidebarItems.map((item, idx) => {
                 if ('children' in item) {
                   const isExpanded = expandedMenus.has(item.label);
@@ -310,7 +296,6 @@ const Layout: React.FC = () => {
               })}
             </nav>
           </aside>
-          </AnnotationWrapper>
         )}
 
         {/* 页面内容 */}

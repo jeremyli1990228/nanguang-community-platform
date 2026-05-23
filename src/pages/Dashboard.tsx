@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { MapPin, Users, Building2, Briefcase, Info, ArrowRight, Home, Thermometer, Droplets, Wind, Zap, X, Upload } from 'lucide-react';
-import { useAnnotation } from '../contexts/AnnotationContext';
-import AnnotationWrapper from '../components/AnnotationWrapper';
 
 const Dashboard: React.FC = () => {
   const [selectedAlarm, setSelectedAlarm] = useState<number | null>(null);
@@ -96,8 +94,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="flex h-full">
       {/* 左侧栏：社区信息一览 */}
-      <AnnotationWrapper id={4}>
-        <div className="w-[380px] bg-white p-5 flex flex-col gap-5 overflow-auto">
+      <div className="w-[380px] bg-white p-5 flex flex-col gap-5 overflow-auto">
         <div>
           <h2 className="text-xl font-bold text-gray-800 mb-4">社区信息一览</h2>
           
@@ -196,13 +193,11 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
-      </AnnotationWrapper>
 
       {/* 中间栏：社区感知和长者服务 */}
       <div className="flex-1 bg-gray-100 p-5 flex flex-col gap-5 overflow-auto">
         {/* 社区感知 */}
-        <AnnotationWrapper id={5}>
-          <div>
+        <div>
           <h2 className="text-xl font-bold text-gray-800 mb-4">社区感知</h2>
           
           {/* 报警统计卡片 */}
@@ -286,11 +281,9 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
-        </AnnotationWrapper>
 
         {/* 长者服务 */}
-        <AnnotationWrapper id={6}>
-          <div>
+        <div>
           <h2 className="text-xl font-bold text-gray-800 mb-4">长者服务</h2>
           <div className="grid grid-cols-2 gap-4">
             {/* 用电量/用水量 */}
@@ -343,7 +336,6 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
-        </AnnotationWrapper>
       </div>
 
       {/* 右侧栏：待处理报警和通知消息 */}
