@@ -25,6 +25,24 @@ const Dashboard: React.FC = () => {
   const [showNonHukouModal, setShowNonHukouModal] = useState(false);
   const [nonHukouCurrentPage, setNonHukouCurrentPage] = useState(1);
   const [nonHukouPageSize, setNonHukouPageSize] = useState(20);
+  
+  // 搜索状态
+  const [searchName, setSearchName] = useState('');
+  const [searchAgeRange, setSearchAgeRange] = useState('');
+  
+  const ageRanges = [
+    { value: '', label: '全部年龄段' },
+    { value: 'under12', label: '12岁以下' },
+    { value: '13-18', label: '13~18岁' },
+    { value: '19-30', label: '19~30岁' },
+    { value: '31-40', label: '31~40岁' },
+    { value: '41-50', label: '41~50岁' },
+    { value: '51-60', label: '51~60岁' },
+    { value: '61-70', label: '61~70岁' },
+    { value: '71-80', label: '71~80岁' },
+    { value: '81-90', label: '81~90岁' },
+    { value: 'over91', label: '91岁以上' },
+  ];
 
   const ageData = [
     { name: '12岁以下', value: 3934, color: '#14b8a6' },
@@ -620,6 +638,32 @@ const Dashboard: React.FC = () => {
               </button>
             </div>
             <div className="flex-1 overflow-auto p-4">
+              {/* 搜索区域 */}
+              <div className="flex gap-4 mb-4">
+                <div className="flex-1">
+                  <label className="block text-sm text-gray-600 mb-1">姓名</label>
+                  <input
+                    type="text"
+                    placeholder="请输入姓名"
+                    value={searchName}
+                    onChange={(e) => setSearchName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="w-48">
+                  <label className="block text-sm text-gray-600 mb-1">年龄段</label>
+                  <select
+                    value={searchAgeRange}
+                    onChange={(e) => setSearchAgeRange(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {ageRanges.map((range) => (
+                      <option key={range.value} value={range.value}>{range.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              
               <div className="overflow-x-auto border rounded">
                 <table className="w-full">
                   <thead className="bg-gray-50">
@@ -719,6 +763,32 @@ const Dashboard: React.FC = () => {
               </button>
             </div>
             <div className="flex-1 overflow-auto p-4">
+              {/* 搜索区域 */}
+              <div className="flex gap-4 mb-4">
+                <div className="flex-1">
+                  <label className="block text-sm text-gray-600 mb-1">姓名</label>
+                  <input
+                    type="text"
+                    placeholder="请输入姓名"
+                    value={searchName}
+                    onChange={(e) => setSearchName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div className="w-48">
+                  <label className="block text-sm text-gray-600 mb-1">年龄段</label>
+                  <select
+                    value={searchAgeRange}
+                    onChange={(e) => setSearchAgeRange(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    {ageRanges.map((range) => (
+                      <option key={range.value} value={range.value}>{range.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              
               <div className="overflow-x-auto border rounded">
                 <table className="w-full">
                   <thead className="bg-gray-50">
@@ -818,6 +888,32 @@ const Dashboard: React.FC = () => {
               </button>
             </div>
             <div className="flex-1 overflow-auto p-4">
+              {/* 搜索区域 */}
+              <div className="flex gap-4 mb-4">
+                <div className="flex-1">
+                  <label className="block text-sm text-gray-600 mb-1">姓名</label>
+                  <input
+                    type="text"
+                    placeholder="请输入姓名"
+                    value={searchName}
+                    onChange={(e) => setSearchName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+                <div className="w-48">
+                  <label className="block text-sm text-gray-600 mb-1">年龄段</label>
+                  <select
+                    value={searchAgeRange}
+                    onChange={(e) => setSearchAgeRange(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  >
+                    {ageRanges.map((range) => (
+                      <option key={range.value} value={range.value}>{range.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              
               <div className="overflow-x-auto border rounded">
                 <table className="w-full">
                   <thead className="bg-gray-50">
