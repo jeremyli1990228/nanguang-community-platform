@@ -36,6 +36,12 @@ const Dashboard: React.FC = () => {
   const [enterprisePageSize, setEnterprisePageSize] = useState(20);
   const [searchEnterpriseName, setSearchEnterpriseName] = useState('');
   
+  // 三小场所列表弹窗
+  const [showSmallBusinessModal, setShowSmallBusinessModal] = useState(false);
+  const [smallBusinessCurrentPage, setSmallBusinessCurrentPage] = useState(1);
+  const [smallBusinessPageSize, setSmallBusinessPageSize] = useState(20);
+  const [searchSmallBusinessName, setSearchSmallBusinessName] = useState('');
+  
   const ageRanges = [
     { value: '', label: '全部年龄段' },
     { value: 'under12', label: '12岁以下' },
@@ -242,7 +248,10 @@ const Dashboard: React.FC = () => {
                 <Briefcase className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="bg-teal-50 rounded-lg p-4 flex items-center justify-between">
+            <div 
+              className="bg-teal-50 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-teal-100 hover:shadow-sm transition-all"
+              onClick={() => setShowSmallBusinessModal(true)}
+            >
               <div>
                 <div className="text-xl font-bold text-gray-800">198</div>
                 <div className="text-sm text-gray-600 mt-1">三小场所（间）</div>
@@ -1131,6 +1140,149 @@ const Dashboard: React.FC = () => {
               <button 
                 className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                 onClick={() => setShowEnterpriseModal(false)}
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* 三小场所列表弹窗 */}
+      {showSmallBusinessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-[900px] max-h-[85vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+              <h3 className="text-lg font-bold text-gray-800">三小场所列表</h3>
+              <button 
+                className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
+                onClick={() => setShowSmallBusinessModal(false)}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              {/* 搜索区域 */}
+              <div className="flex gap-4 mb-4 justify-start">
+                <div className="w-48">
+                  <label className="block text-sm text-gray-600 mb-1">商铺名称</label>
+                  <input
+                    type="text"
+                    placeholder="请输入商铺名称"
+                    value={searchSmallBusinessName}
+                    onChange={(e) => setSearchSmallBusinessName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                </div>
+                <div className="w-48">
+                  <label className="block text-sm text-gray-600 mb-1">联系人名称</label>
+                  <input
+                    type="text"
+                    placeholder="请输入联系人名称"
+                    value={searchSmallBusinessName}
+                    onChange={(e) => setSearchSmallBusinessName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                </div>
+              </div>
+              
+              <div className="overflow-x-auto border rounded">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">序号</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">商铺名称</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">商户地址</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">联系人名称</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">联系电话</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">状态</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { id: 1, name: '奕睿烟酒', address: '南光村42-1', contactName: '王双梅', phone: '136****9211', status: '启用' },
+                      { id: 2, name: '粤汤府专业炖汤', address: '深圳市南山区南山街道南光社区正龙村4...', contactName: '蔡成基', phone: '187****7404', status: '启用' },
+                      { id: 3, name: '雅之都专业美发', address: '深圳市南山区海德二道南光村105号-5', contactName: '王思敏', phone: '137****7774', status: '启用' },
+                      { id: 4, name: '淘书乐二手书店', address: '深圳市南山区海德二道南光村104号一楼...', contactName: '谢林涛', phone: '133****1088', status: '启用' },
+                      { id: 5, name: '华兴家电维修服务部', address: '深圳市南山区海德二道南光村104号104室', contactName: '张建营', phone: '136****5419', status: '启用' },
+                      { id: 6, name: '尚阳广告', address: '深圳市南山区海德二道426号104号', contactName: '高云祥', phone: '138****1289', status: '启用' },
+                      { id: 7, name: '和信达家政', address: '南光花园4栋104', contactName: '王鑫', phone: '132****1177', status: '启用' },
+                      { id: 8, name: '爱巢家居家电', address: '南光花园3栋101', contactName: '雪丰玺', phone: '189****7027', status: '启用' },
+                      { id: 9, name: '深圳市良丰速递有限公司', address: '南光花园2栋104', contactName: '石中坚', phone: '137****8300', status: '启用' },
+                      { id: 10, name: '鹏歌音乐中心', address: '南光花园2栋101', contactName: '潘桂钊', phone: '137****6852', status: '启用' },
+                      { id: 11, name: '养生鼎', address: '南光村102-3', contactName: '温惠慈', phone: '136****5345', status: '启用' },
+                      { id: 12, name: '老式麻辣烫', address: '103栋104', contactName: '高亚军', phone: '155****7990', status: '启用' },
+                      { id: 13, name: '疯狂烤吧', address: '南光村98-1', contactName: '谭名高', phone: '131****9938', status: '启用' },
+                      { id: 14, name: '潮丰传统理发店', address: '南光村98-2', contactName: '陈思源', phone: '133****1755', status: '启用' },
+                      { id: 15, name: '每天惠家万富超市', address: '南光村43-4', contactName: '傅海云', phone: '135****2989', status: '启用' },
+                      { id: 16, name: '亨通五金', address: '南光村43-3', contactName: '乐绍端', phone: '136****2754', status: '启用' },
+                      { id: 17, name: '日月图文广告', address: '南光村43-2', contactName: '欧新华', phone: '135****6880', status: '启用' },
+                    ].map((item, idx) => (
+                      <tr key={item.id} className={idx % 2 === 1 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{idx + 1}</td>
+                        <td className="px-4 py-3 text-sm text-gray-800 border-b border-gray-200">{item.name}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.address}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.contactName}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.phone}</td>
+                        <td className="px-4 py-3 text-sm border-b border-gray-200">
+                          <span className="px-2 py-1 bg-teal-100 text-teal-600 rounded text-xs">
+                            {item.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              {/* 分页 */}
+              <div className="flex items-center justify-end gap-3 mt-4">
+                <span className="text-sm text-gray-600">共 198 条</span>
+                <select
+                  value={smallBusinessPageSize}
+                  onChange={(e) => setSmallBusinessPageSize(Number(e.target.value))}
+                  className="px-3 py-1.5 border border-gray-300 rounded text-sm"
+                >
+                  <option value={10}>10条/页</option>
+                  <option value={20}>20条/页</option>
+                  <option value={50}>50条/页</option>
+                  <option value={100}>100条/页</option>
+                </select>
+                <div className="flex items-center gap-1">
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                    &lt;
+                  </button>
+                  {[1, 2, 3, 4, 5, '...', 10].map((page, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => typeof page === 'number' && setSmallBusinessCurrentPage(page)}
+                      className={`px-3 py-1 rounded text-sm ${
+                        page === smallBusinessCurrentPage
+                          ? 'bg-teal-500 text-white'
+                          : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                    &gt;
+                  </button>
+                </div>
+                <span className="text-sm text-gray-600">前往</span>
+                <input
+                  type="number"
+                  value={smallBusinessCurrentPage}
+                  onChange={(e) => setSmallBusinessCurrentPage(Number(e.target.value))}
+                  className="w-14 px-2 py-1.5 border border-gray-300 rounded text-sm text-center"
+                />
+                <span className="text-sm text-gray-600">页</span>
+              </div>
+            </div>
+            <div className="flex justify-end p-4 border-t border-gray-200 flex-shrink-0">
+              <button 
+                className="px-6 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
+                onClick={() => setShowSmallBusinessModal(false)}
               >
                 确定
               </button>
