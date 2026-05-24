@@ -272,7 +272,7 @@ const Dashboard: React.FC = () => {
   const nonHukouData = populationData.filter(item => !item.isShenzhenHukou);
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex">
       {/* 左侧栏：社区信息一览 */}
       <div className="w-[380px] bg-white p-5 flex flex-col gap-5 overflow-auto">
         <div>
@@ -675,9 +675,9 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* 右侧栏：待处理报警和通知消息 */}
-      <div className="w-[320px] bg-white p-5 flex flex-col gap-5 h-full">
+      <div className="w-[320px] bg-white p-5 flex flex-col gap-5">
         {/* 待处理报警 */}
-        <div className="flex-shrink-0">
+        <div>
           <h2 className="text-lg font-bold text-gray-800 mb-4">待处理报警</h2>
           <div className="space-y-3">
             {pendingAlarms.map((alarm) => (
@@ -709,13 +709,13 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* 通知消息 */}
-        <div className="bg-gray-50 rounded-xl p-4 flex flex-col flex-1 overflow-hidden">
-          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2 flex-shrink-0">
+        <div className="bg-gray-50 rounded-xl p-4">
+          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
             通知消息
           </h2>
           <div 
-            className="space-y-3 overflow-y-auto flex-1 pr-2"
+            className="space-y-3 max-h-[450px] overflow-y-auto pr-2"
             style={{
               scrollbarWidth: 'thin',
               scrollbarColor: '#94a3b8 #f1f5f9'
