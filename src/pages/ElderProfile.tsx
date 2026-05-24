@@ -26,6 +26,9 @@ interface ElderDetail {
   idNumber: string;
   maritalStatus: string;
   isResident: string;
+  isLivingAlone: string;
+  hasChronicDisease: string;
+  childContact: string;
   address: string;
   housingCode: string;
   community: string;
@@ -82,6 +85,9 @@ const ElderProfile: React.FC = () => {
       idNumber: '320106194205242828',
       maritalStatus: '已婚',
       isResident: '是',
+      isLivingAlone: '是',
+      hasChronicDisease: '高血压',
+      childContact: '李明 13800138000',
       address: '广东省深圳市南山区南山街道南光社区南山大道1136号光彩新世纪家园A.B.C栋C2201',
       housingCode: '4403050020070200001000473',
       community: '南光社区',
@@ -309,6 +315,17 @@ const ElderProfile: React.FC = () => {
                 
                 <div 
                   className="flex items-center gap-2 py-2 px-4 cursor-pointer"
+                  onClick={() => setActiveNav('watch')}
+                >
+                  <div className={`w-1.5 h-1.5 rounded-full ${activeNav === 'watch' ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
+                  <span className={`text-sm ${activeNav === 'watch' ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                    智能手环数据
+                  </span>
+                </div>
+                <div className="ml-3 w-0.5 h-3 bg-gray-300"></div>
+                
+                <div 
+                  className="flex items-center gap-2 py-2 px-4 cursor-pointer"
                   onClick={() => setActiveNav('health')}
                 >
                   <div className={`w-1.5 h-1.5 rounded-full ${activeNav === 'health' ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
@@ -368,6 +385,10 @@ const ElderProfile: React.FC = () => {
                         <span className="text-gray-400 text-sm w-20 shrink-0">人员类型:</span>
                         <span className="text-gray-700 text-sm">{currentElder.personType}</span>
                       </div>
+                      <div className="flex items-start">
+                        <span className="text-gray-400 text-sm w-20 shrink-0">是否常住人员:</span>
+                        <span className="text-gray-700 text-sm">{currentElder.isResident}</span>
+                      </div>
                     </div>
                     <div className="space-y-3">
                       <div className="flex items-start">
@@ -383,8 +404,16 @@ const ElderProfile: React.FC = () => {
                         <span className="text-gray-700 text-sm">{currentElder.maritalStatus}</span>
                       </div>
                       <div className="flex items-start">
-                        <span className="text-gray-400 text-sm w-20 shrink-0">是否常住人员:</span>
-                        <span className="text-gray-700 text-sm">{currentElder.isResident}</span>
+                        <span className="text-gray-400 text-sm w-20 shrink-0">是否独居:</span>
+                        <span className="text-gray-700 text-sm">{currentElder.isLivingAlone}</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-gray-400 text-sm w-20 shrink-0">有无慢性病:</span>
+                        <span className="text-gray-700 text-sm">{currentElder.hasChronicDisease}</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-gray-400 text-sm w-20 shrink-0">子女联络人:</span>
+                        <span className="text-gray-700 text-sm">{currentElder.childContact}</span>
                       </div>
                     </div>
                     <div className="space-y-3">
@@ -442,6 +471,10 @@ const ElderProfile: React.FC = () => {
                       <span className="text-gray-700 text-sm">{currentElder.smokeSensor}</span>
                     </div>
                   </div>
+                </div>
+                
+                <div className="p-6 border-t border-gray-200">
+                  <h2 className="text-lg font-semibold text-blue-600">智能手环数据(最新上报时间：2026-01-23 14:53:52)</h2>
                 </div>
                 
                 <div className="p-6 border-t border-gray-200">

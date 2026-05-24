@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 interface AlarmType {
   id: number;
   type: string;
+  alarmTypeRule: string;
   product: string;
   event: string;
   level: string;
@@ -24,6 +25,7 @@ const AlarmTypeConfig: React.FC = () => {
   // 表单状态
   const [formData, setFormData] = useState({
     typeName: '',
+    alarmTypeRule: '',
     product: '',
     event: '',
     level: '',
@@ -39,23 +41,23 @@ const AlarmTypeConfig: React.FC = () => {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const alarmTypes: AlarmType[] = [
-    { id: 1, type: '守护机器人设备离线', product: '家庭守护机器人', event: '设备离线', level: '黄色报警', status: '启用' },
-    { id: 2, type: '机器人隐私状态变更，当前任务已暂停。', product: '家庭守护机器人', event: '机器人隐私状态变更，当前任务已暂停。', level: '蓝色报警', status: '启用' },
-    { id: 3, type: '机器人地图已变更，关联任务已暂停', product: '家庭守护机器人', event: '机器人地图已变更，关联任务已暂停', level: '蓝色报警', status: '启用' },
-    { id: 4, type: '识别到看护对象即将离开，请求与您通话', product: '家庭守护机器人', event: '识别到看护对象即将离开，请求与您通话', level: '蓝色报警', status: '启用' },
-    { id: 5, type: '建图失败提醒', product: '家庭守护机器人', event: '建图失败提醒', level: '蓝色报警', status: '启用' },
-    { id: 6, type: '低电量回充中断', product: '家庭守护机器人', event: '低电量回充中断', level: '蓝色报警', status: '启用' },
-    { id: 7, type: '电量低正在自动返回充电桩', product: '家庭守护机器人', event: '电量低正在自动返回充电桩', level: '蓝色报警', status: '启用' },
-    { id: 8, type: '发现有陌生人出现，请求与您通话', product: '家庭守护机器人', event: '发现有陌生人出现，请求与您通话', level: '蓝色报警', status: '启用' },
-    { id: 9, type: '检测到有人呼救，请求与您通话', product: '家庭守护机器人', event: '检测到有人呼救，请求与您通话', level: '红色报警', status: '启用' },
-    { id: 10, type: '识别到有小宠物（猫/狗）在禁区逗留', product: '家庭守护机器人', event: '检测到有小宠物（猫/狗）在禁区逗留，...', level: '蓝色报警', status: '启用' },
-    { id: 11, type: '识别到有人在禁区逗留，请求与您通话', product: '家庭守护机器人', event: '识别到有人在禁区逗留，请求与您通话', level: '蓝色报警', status: '启用' },
-    { id: 12, type: '识别到家庭成员可能有爬高的危险行为...', product: '家庭守护机器人', event: '识别到家庭成员可能有爬高的危险行为...', level: '蓝色报警', status: '启用' },
-    { id: 13, type: '识别到哭声，请求与您通话', product: '家庭守护机器人', event: '识别到哭声，请求与您通话', level: '蓝色报警', status: '启用' },
-    { id: 14, type: '识别到家庭成员可能跌倒，请求与您通话', product: '家庭守护机器人', event: '识别到家庭成员可能跌倒，请求与您通话', level: '蓝色报警', status: '启用' },
-    { id: 15, type: '手环检测超过血氧收缩压上限阈值', product: '智能手环', event: '超过血氧收缩压上限阈值', level: '蓝色报警', status: '启用' },
-    { id: 16, type: '手环检测低于血氧下限阈值', product: '智能手环', event: '低于血氧下限阈值', level: '蓝色报警', status: '启用' },
-    { id: 17, type: '用电设备离线报警', product: '用电设备', event: '设备离线', level: '蓝色报警', status: '启用' },
+    { id: 1, type: '守护机器人设备离线', alarmTypeRule: '设备离线超过5分钟触发报警', product: '家庭守护机器人', event: '设备离线', level: '黄色报警', status: '启用' },
+    { id: 2, type: '机器人隐私状态变更，当前任务已暂停。', alarmTypeRule: '用户开启或关闭隐私模式时触发', product: '家庭守护机器人', event: '机器人隐私状态变更，当前任务已暂停。', level: '蓝色报警', status: '启用' },
+    { id: 3, type: '机器人地图已变更，关联任务已暂停', alarmTypeRule: '地图发生变更时触发', product: '家庭守护机器人', event: '机器人地图已变更，关联任务已暂停', level: '蓝色报警', status: '启用' },
+    { id: 4, type: '识别到看护对象即将离开，请求与您通话', alarmTypeRule: '检测到看护对象移动到设定的边界范围外时触发', product: '家庭守护机器人', event: '识别到看护对象即将离开，请求与您通话', level: '蓝色报警', status: '启用' },
+    { id: 5, type: '建图失败提醒', alarmTypeRule: '连续3次建图失败时触发', product: '家庭守护机器人', event: '建图失败提醒', level: '蓝色报警', status: '启用' },
+    { id: 6, type: '低电量回充中断', alarmTypeRule: '回充过程中发生中断时触发', product: '家庭守护机器人', event: '低电量回充中断', level: '蓝色报警', status: '启用' },
+    { id: 7, type: '电量低正在自动返回充电桩', alarmTypeRule: '电量低于20%时触发', product: '家庭守护机器人', event: '电量低正在自动返回充电桩', level: '蓝色报警', status: '启用' },
+    { id: 8, type: '发现有陌生人出现，请求与您通话', alarmTypeRule: '检测到陌生面孔时触发', product: '家庭守护机器人', event: '发现有陌生人出现，请求与您通话', level: '蓝色报警', status: '启用' },
+    { id: 9, type: '检测到有人呼救，请求与您通话', alarmTypeRule: '检测到呼救声超过3秒时触发', product: '家庭守护机器人', event: '检测到有人呼救，请求与您通话', level: '红色报警', status: '启用' },
+    { id: 10, type: '识别到有小宠物（猫/狗）在禁区逗留', alarmTypeRule: '检测到宠物在禁区逗留超过10秒', product: '家庭守护机器人', event: '检测到有小宠物（猫/狗）在禁区逗留，...', level: '蓝色报警', status: '启用' },
+    { id: 11, type: '识别到有人在禁区逗留，请求与您通话', alarmTypeRule: '检测到人在禁区逗留超过15秒', product: '家庭守护机器人', event: '识别到有人在禁区逗留，请求与您通话', level: '蓝色报警', status: '启用' },
+    { id: 12, type: '识别到家庭成员可能有爬高的危险行为...', alarmTypeRule: '检测到爬高危险行为时触发', product: '家庭守护机器人', event: '识别到家庭成员可能有爬高的危险行为...', level: '蓝色报警', status: '启用' },
+    { id: 13, type: '识别到哭声，请求与您通话', alarmTypeRule: '检测到哭声超过5秒时触发', product: '家庭守护机器人', event: '识别到哭声，请求与您通话', level: '蓝色报警', status: '启用' },
+    { id: 14, type: '识别到家庭成员可能跌倒，请求与您通话', alarmTypeRule: '检测到跌倒姿态超过2秒时触发', product: '家庭守护机器人', event: '识别到家庭成员可能跌倒，请求与您通话', level: '蓝色报警', status: '启用' },
+    { id: 15, type: '手环检测超过血氧收缩压上限阈值', alarmTypeRule: '血氧收缩压持续高于设定阈值超过5分钟', product: '智能手环', event: '超过血氧收缩压上限阈值', level: '蓝色报警', status: '启用' },
+    { id: 16, type: '手环检测低于血氧下限阈值', alarmTypeRule: '血氧低于设定下限超过5分钟', product: '智能手环', event: '低于血氧下限阈值', level: '蓝色报警', status: '启用' },
+    { id: 17, type: '用电设备离线报警', alarmTypeRule: '设备离线超过10分钟触发报警', product: '用电设备', event: '设备离线', level: '蓝色报警', status: '启用' },
   ];
 
   const handlePageChange = (page: number) => {
@@ -67,6 +69,7 @@ const AlarmTypeConfig: React.FC = () => {
   const handleOpenAddModal = () => {
     setFormData({
       typeName: '',
+      alarmTypeRule: '',
       product: '',
       event: '',
       level: '',
@@ -84,6 +87,7 @@ const AlarmTypeConfig: React.FC = () => {
     setCurrentAlarmType(item);
     setFormData({
       typeName: item.type,
+      alarmTypeRule: item.alarmTypeRule,
       product: item.product,
       event: item.event,
       level: item.level,
@@ -298,6 +302,16 @@ const AlarmTypeConfig: React.FC = () => {
                   />
                 </div>
                 <div>
+                  <label className="block text-sm text-gray-700 mb-2">报警类型规则</label>
+                  <input
+                    type="text"
+                    placeholder="请输入"
+                    value={formData.alarmTypeRule}
+                    onChange={(e) => setFormData({ ...formData, alarmTypeRule: e.target.value })}
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
                   <label className="block text-sm text-gray-700 mb-2">
                     <span className="text-red-500">*</span>关联物联产品
                   </label>
@@ -418,6 +432,16 @@ const AlarmTypeConfig: React.FC = () => {
                     placeholder="请输入"
                     value={formData.typeName}
                     onChange={(e) => setFormData({ ...formData, typeName: e.target.value })}
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-700 mb-2">报警类型规则</label>
+                  <input
+                    type="text"
+                    placeholder="请输入"
+                    value={formData.alarmTypeRule}
+                    onChange={(e) => setFormData({ ...formData, alarmTypeRule: e.target.value })}
                     className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
                   />
                 </div>

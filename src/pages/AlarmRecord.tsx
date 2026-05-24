@@ -5,6 +5,7 @@ interface AlarmRecord {
   alarmNo: string;
   deviceName: string;
   alarmType: string;
+  alarmTypeRule: string;
   deviceType: string;
   status: string;
   address: string;
@@ -38,22 +39,22 @@ const AlarmRecord: React.FC = () => {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const alarmRecords: AlarmRecord[] = [
-    { id: 1, alarmNo: '2026052100267...', deviceName: '正龙村13号303', alarmType: '故障电弧报警', deviceType: '用电', status: '报警中', address: '正龙村13号303', alarmDevice: '正龙村13号303', alarmTime: '2026-05-21 19:19:39', handler: '-', result: '-', handleTime: '-' },
-    { id: 2, alarmNo: '2026052100267...', deviceName: '南光村59号303', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号303', alarmDevice: '南光村59号303', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 3, alarmNo: '2026052100267...', deviceName: '南光村59号103', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号103', alarmDevice: '南光村59号103', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 4, alarmNo: '2026052100267...', deviceName: '南光村59号604', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号604', alarmDevice: '南光村59号604', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 5, alarmNo: '2026052100267...', deviceName: '南光村59号704', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号704', alarmDevice: '南光村59号704', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 6, alarmNo: '2026052100267...', deviceName: '正龙村101号402', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '正龙村101号402', alarmDevice: '正龙村101号402', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 7, alarmNo: '2026052100267...', deviceName: '正龙村101号202', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '正龙村101号202', alarmDevice: '正龙村101号202', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 8, alarmNo: '2026052100267...', deviceName: '南光村59号203', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号203', alarmDevice: '南光村59号203', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 9, alarmNo: '2026052100267...', deviceName: '南光村59号503', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号503', alarmDevice: '南光村59号503', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 10, alarmNo: '2026052100267...', deviceName: '南光村59号303', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号303', alarmDevice: '南光村59号303', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 11, alarmNo: '2026052100267...', deviceName: '南光村59号103', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号103', alarmDevice: '南光村59号103', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 12, alarmNo: '2026052100267...', deviceName: '南光村59号604', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号604', alarmDevice: '南光村59号604', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 13, alarmNo: '2026052100267...', deviceName: '南光村59号704', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号704', alarmDevice: '南光村59号704', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 14, alarmNo: '2026052100267...', deviceName: '正龙村101号402', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '正龙村101号402', alarmDevice: '正龙村101号402', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 15, alarmNo: '2026052100267...', deviceName: '正龙村101号202', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '正龙村101号202', alarmDevice: '正龙村101号202', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
-    { id: 16, alarmNo: '2026052100267...', deviceName: '南光村59号203', alarmType: '用电设备离线...', deviceType: '用电', status: '报警中', address: '南光村59号203', alarmDevice: '南光村59号203', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 1, alarmNo: '2026052100267...', deviceName: '正龙村13号303', alarmType: '故障电弧报警', alarmTypeRule: '故障电弧电流超过阈值持续3秒触发报警', deviceType: '用电', status: '报警中', address: '正龙村13号303', alarmDevice: '正龙村13号303', alarmTime: '2026-05-21 19:19:39', handler: '-', result: '-', handleTime: '-' },
+    { id: 2, alarmNo: '2026052100267...', deviceName: '南光村59号303', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号303', alarmDevice: '南光村59号303', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 3, alarmNo: '2026052100267...', deviceName: '南光村59号103', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号103', alarmDevice: '南光村59号103', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 4, alarmNo: '2026052100267...', deviceName: '南光村59号604', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号604', alarmDevice: '南光村59号604', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 5, alarmNo: '2026052100267...', deviceName: '南光村59号704', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号704', alarmDevice: '南光村59号704', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 6, alarmNo: '2026052100267...', deviceName: '正龙村101号402', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '正龙村101号402', alarmDevice: '正龙村101号402', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 7, alarmNo: '2026052100267...', deviceName: '正龙村101号202', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '正龙村101号202', alarmDevice: '正龙村101号202', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 8, alarmNo: '2026052100267...', deviceName: '南光村59号203', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号203', alarmDevice: '南光村59号203', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 9, alarmNo: '2026052100267...', deviceName: '南光村59号503', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号503', alarmDevice: '南光村59号503', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 10, alarmNo: '2026052100267...', deviceName: '南光村59号303', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号303', alarmDevice: '南光村59号303', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 11, alarmNo: '2026052100267...', deviceName: '南光村59号103', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号103', alarmDevice: '南光村59号103', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 12, alarmNo: '2026052100267...', deviceName: '南光村59号604', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号604', alarmDevice: '南光村59号604', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 13, alarmNo: '2026052100267...', deviceName: '南光村59号704', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号704', alarmDevice: '南光村59号704', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 14, alarmNo: '2026052100267...', deviceName: '正龙村101号402', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '正龙村101号402', alarmDevice: '正龙村101号402', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 15, alarmNo: '2026052100267...', deviceName: '正龙村101号202', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '正龙村101号202', alarmDevice: '正龙村101号202', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
+    { id: 16, alarmNo: '2026052100267...', deviceName: '南光村59号203', alarmType: '用电设备离线...', alarmTypeRule: '设备离线超过10分钟触发报警', deviceType: '用电', status: '报警中', address: '南光村59号203', alarmDevice: '南光村59号203', alarmTime: '2026-05-21 18...', handler: '-', result: '-', handleTime: '-' },
   ];
 
   const handlePageChange = (page: number) => {
@@ -370,6 +371,10 @@ const AlarmRecord: React.FC = () => {
                 <div className="grid grid-cols-2 border-b border-gray-200">
                   <div className="py-3 px-4 bg-gray-50 text-gray-600">报警类型</div>
                   <div className="py-3 px-4 text-gray-800">{currentAlarm.alarmType}</div>
+                </div>
+                <div className="grid grid-cols-2 border-b border-gray-200">
+                  <div className="py-3 px-4 bg-gray-50 text-gray-600">报警类型规则</div>
+                  <div className="py-3 px-4 text-gray-800">{currentAlarm.alarmTypeRule}</div>
                 </div>
                 <div className="grid grid-cols-2 border-b border-gray-200">
                   <div className="py-3 px-4 bg-gray-50 text-gray-600">报警状态</div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, RefreshCw, Plus, Upload, X, AlertCircle } from 'lucide-react';
+import { Search, RefreshCw, Plus, Upload, X, AlertCircle, ChevronRight, ChevronDown, Building2, Home, Store, Factory, MapPin } from 'lucide-react';
 
 const ResidentManagement: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -7,6 +7,119 @@ const ResidentManagement: React.FC = () => {
   const [searchFormData, setSearchFormData] = useState({
     name: ''
   });
+
+  // 左侧树形结构数据
+  const treeData = [
+    {
+      id: 'all',
+      label: '全部',
+      icon: null,
+      residentCount: 17
+    },
+    {
+      id: 'merchant',
+      label: '商户',
+      icon: <Store className="w-4 h-4" />,
+      children: [
+        { id: 'merchant-1', label: '便民超市', residentCount: 5 },
+        { id: 'merchant-2', label: '早餐店', residentCount: 3 },
+        { id: 'merchant-3', label: '药店', residentCount: 2 }
+      ]
+    },
+    {
+      id: 'community',
+      label: '小区',
+      icon: <Building2 className="w-4 h-4" />,
+      children: [
+        { 
+          id: 'community-1', 
+          label: '阳光花园', 
+          children: [
+            { id: 'community-1-1', label: '1栋', residentCount: 24 },
+            { id: 'community-1-2', label: '2栋', residentCount: 18 },
+            { id: 'community-1-3', label: '3栋', residentCount: 22 }
+          ]
+        },
+        { 
+          id: 'community-2', 
+          label: '幸福家园', 
+          children: [
+            { id: 'community-2-1', label: 'A栋', residentCount: 30 },
+            { id: 'community-2-2', label: 'B栋', residentCount: 25 }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'house',
+      label: '房屋',
+      icon: <Home className="w-4 h-4" />,
+      children: [
+        { id: 'house-1', label: '101室', residentCount: 3 },
+        { id: 'house-2', label: '102室', residentCount: 2 },
+        { id: 'house-3', label: '201室', residentCount: 4 }
+      ]
+    },
+    {
+      id: 'enterprise',
+      label: '企业',
+      icon: <Factory className="w-4 h-4" />,
+      children: [
+        { id: 'enterprise-1', label: '科技公司A', residentCount: 15 },
+        { id: 'enterprise-2', label: '贸易公司B', residentCount: 8 }
+      ]
+    },
+    {
+      id: 'grid',
+      label: '网格',
+      icon: <MapPin className="w-4 h-4" />,
+      children: [
+        { id: 'grid-1', label: '第一网格', residentCount: 120 },
+        { id: 'grid-2', label: '第二网格', residentCount: 95 },
+        { id: 'grid-3', label: '第三网格', residentCount: 110 }
+      ]
+    }
+  ];
+
+  // 树展开状态
+  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set(['community', 'community-1']));
+  // 选中节点，默认选中"全部"
+  const [selectedNode, setSelectedNode] = useState<string>('all');
+
+  // 为住户数据添加分类标签，用于筛选
+  const residentsWithCategory = [
+    { id: 1, name: '戚道琳', phone: '181****1215', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '高龄老人', isShenzhenHukou: true, category: 'community-1-1' },
+    { id: 2, name: '陈稳豪', phone: '186****2244', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true, category: 'community-1-1' },
+    { id: 3, name: '李振龙', phone: '188****0039', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true, category: 'community-1-2' },
+    { id: 4, name: '李小春', phone: '156****108', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false, category: 'community-1-2' },
+    { id: 5, name: '杨春雨', phone: '158****5434', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true, category: 'community-2-1' },
+    { id: 6, name: '邓华龙', phone: '157****6984', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false, category: 'merchant-1' },
+    { id: 7, name: '张亚飞', phone: '187****5102', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true, category: 'enterprise-1' },
+    { id: 8, name: '杨文杰', phone: '178****5063', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true, category: 'grid-1' },
+    { id: 9, name: '庄小娥', phone: '136****8271', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false, category: 'house-1' },
+    { id: 10, name: '管庆锦', phone: '138****8764', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true, category: 'grid-2' },
+    { id: 11, name: '刘倚文', phone: '159****6645', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true, category: 'community-2-2' },
+    { id: 12, name: '张文', phone: '152****8240', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false, category: 'merchant-2' },
+    { id: 13, name: '王柱柱', phone: '187****7115', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true, category: 'enterprise-2' },
+    { id: 14, name: '李佳鹏', phone: '152****0128', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true, category: 'grid-3' },
+    { id: 15, name: '张宁', phone: '187****5686', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false, category: 'house-2' },
+    { id: 16, name: '张溢航', phone: '186****8806', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '满族', type: '普通住户', isShenzhenHukou: true, category: 'community-1-3' },
+    { id: 17, name: '佟力男', phone: '135****3049', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '满族', type: '普通住户', isShenzhenHukou: true, category: 'merchant-3' }
+  ];
+
+  // 根据选中节点过滤住户数据
+  const getFilteredResidents = () => {
+    if (!selectedNode || selectedNode === 'all') {
+      return residentsWithCategory;
+    }
+
+    // 简单匹配：完全匹配或前缀匹配
+    return residentsWithCategory.filter(r => 
+      r.category === selectedNode || r.category.startsWith(selectedNode + '-')
+    );
+  };
+
+  const filteredResidents = getFilteredResidents();
 
   // 弹窗状态
   const [showAddModal, setShowAddModal] = useState(false);
@@ -45,25 +158,7 @@ const ResidentManagement: React.FC = () => {
     type: ''
   });
 
-  const residents = [
-    { id: 1, name: '戚道琳', phone: '181****1215', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '高龄老人', isShenzhenHukou: true },
-    { id: 2, name: '陈稳豪', phone: '186****2244', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true },
-    { id: 3, name: '李振龙', phone: '188****0039', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true },
-    { id: 4, name: '李小春', phone: '156****1080', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false },
-    { id: 5, name: '杨春雨', phone: '158****5434', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true },
-    { id: 6, name: '邓华龙', phone: '157****6984', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false },
-    { id: 7, name: '张亚飞', phone: '187****5102', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true },
-    { id: 8, name: '杨文杰', phone: '178****5063', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true },
-    { id: 9, name: '庄小娥', phone: '136****8271', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false },
-    { id: 10, name: '管庆锦', phone: '138****8764', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true },
-    { id: 11, name: '刘倚文', phone: '159****6645', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true },
-    { id: 12, name: '张文', phone: '152****8240', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false },
-    { id: 13, name: '王柱柱', phone: '187****7115', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true },
-    { id: 14, name: '李佳鹏', phone: '152****0128', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: true },
-    { id: 15, name: '张宁', phone: '187****5686', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '普通住户', isShenzhenHukou: false },
-    { id: 16, name: '张溢航', phone: '186****8806', gender: '男', address: '广东省深圳市南山区南山街道南...', nation: '满族', type: '普通住户', isShenzhenHukou: true },
-    { id: 17, name: '佟力男', phone: '135****3049', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '满族', type: '普通住户', isShenzhenHukou: true },
-  ];
+
 
   const handleSearch = () => {
     console.log('搜索', searchFormData);
@@ -152,137 +247,212 @@ const ResidentManagement: React.FC = () => {
     setShowImportModal(false);
   };
 
+  // 切换树节点展开/收起
+  const toggleExpand = (nodeId: string) => {
+    const newExpanded = new Set(expandedNodes);
+    if (newExpanded.has(nodeId)) {
+      newExpanded.delete(nodeId);
+    } else {
+      newExpanded.add(nodeId);
+    }
+    setExpandedNodes(newExpanded);
+  };
+
+  // 选中树节点
+  const selectNode = (nodeId: string) => {
+    setSelectedNode(nodeId);
+    setCurrentPage(1);
+  };
+
+  // 渲染树节点
+  const renderTreeNode = (node: any, level: number = 0) => {
+    const hasChildren = node.children && node.children.length > 0;
+    const isExpanded = expandedNodes.has(node.id);
+    const isSelected = selectedNode === node.id;
+
+    return (
+      <div key={node.id}>
+        <div
+          className={`flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-blue-50 transition-colors ${
+            isSelected ? 'bg-blue-100 text-blue-700' : 'text-gray-700'
+          }`}
+          style={{ paddingLeft: `${level * 16 + 12}px` }}
+          onClick={() => selectNode(node.id)}
+        >
+          {hasChildren ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleExpand(node.id);
+              }}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            </button>
+          ) : (
+            <span className="w-4" />
+          )}
+          {node.icon && <span className="text-gray-500">{node.icon}</span>}
+          <span className="text-sm flex-1">{node.label}</span>
+          {node.residentCount !== undefined && (
+            <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">
+              {node.residentCount}
+            </span>
+          )}
+        </div>
+        {hasChildren && isExpanded && (
+          <div>
+            {node.children.map((child: any) => renderTreeNode(child, level + 1))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="p-5">
-      {/* 搜索区域 */}
-      <div className="bg-white rounded-t-lg p-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">姓名</span>
-              <input
-                type="text"
-                value={searchFormData.name}
-                onChange={(e) => setSearchFormData({ ...searchFormData, name: e.target.value })}
-                placeholder="请输入"
-                className="px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                style={{ width: '180px' }}
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleSearch}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
-            >
-              <Search className="h-4 w-4" />
-              搜索
-            </button>
-            <button
-              onClick={handleReset}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-white text-gray-600 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
-            >
-              <RefreshCw className="h-4 w-4" />
-              重置
-            </button>
-            <button
-              onClick={handleAdd}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              新增
-            </button>
-            <button
-              onClick={handleImport}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
-            >
-              <Upload className="h-4 w-4" />
-              导入
-            </button>
-          </div>
+    <div className="p-5 flex gap-5 h-[calc(100vh-40px)]">
+      {/* 左侧树形导航 */}
+      <div className="w-[280px] bg-white rounded-lg border border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-800">住户分类</h2>
+        </div>
+        <div className="flex-1 overflow-y-auto py-2">
+          {treeData.map(node => renderTreeNode(node))}
         </div>
       </div>
 
-      {/* 表格区域 */}
-      <div className="bg-white">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">序号</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">姓名</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">联系方式</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">性别</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">居住地址</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">民族</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">人员类型</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {residents.map((item, idx) => (
-                <tr key={item.id} className={idx % 2 === 1 ? 'bg-gray-50' : 'bg-white'}>
-                  <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{idx + 1}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800 border-b border-gray-200">{item.name}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.phone}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.gender}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.address}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.nation}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.type}</td>
-                  <td className="px-4 py-3 text-sm border-b border-gray-200">
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">编辑</button>
-                      <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">删除</button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* 右侧住户列表 */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* 搜索区域 */}
+        <div className="bg-white rounded-t-lg p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">姓名</span>
+                <input
+                  type="text"
+                  value={searchFormData.name}
+                  onChange={(e) => setSearchFormData({ ...searchFormData, name: e.target.value })}
+                  placeholder="请输入"
+                  className="px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  style={{ width: '180px' }}
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleSearch}
+                className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
+              >
+                <Search className="h-4 w-4" />
+                搜索
+              </button>
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-1.5 px-4 py-1.5 bg-white text-gray-600 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
+              >
+                <RefreshCw className="h-4 w-4" />
+                重置
+              </button>
+              <button
+                onClick={handleAdd}
+                className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                新增
+              </button>
+              <button
+                onClick={handleImport}
+                className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
+              >
+                <Upload className="h-4 w-4" />
+                导入
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* 分页 */}
-        <div className="flex items-center justify-end gap-3 p-4 border-t border-gray-200">
-          <span className="text-sm text-gray-600">共 43928 条</span>
-          <select
-            value={pageSize}
-            onChange={(e) => setPageSize(Number(e.target.value))}
-            className="px-3 py-1.5 border border-gray-300 rounded text-sm"
-          >
-            <option value={10}>10条/页</option>
-            <option value={20}>20条/页</option>
-            <option value={50}>50条/页</option>
-            <option value={100}>100条/页</option>
-          </select>
-          <div className="flex items-center gap-1">
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
-              &lt;
-            </button>
-            {[1, 2, 3, 4, 5, 6, '...', 2197].map((page, idx) => (
-              <button
-                key={idx}
-                onClick={() => typeof page === 'number' && setCurrentPage(page)}
-                className={`px-3 py-1 rounded text-sm ${
-                  page === currentPage
-                    ? 'bg-blue-500 text-white'
-                    : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
-              &gt;
-            </button>
+        {/* 表格区域 */}
+        <div className="bg-white flex-1 flex flex-col overflow-hidden rounded-b-lg">
+          <div className="flex-1 overflow-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 sticky top-0">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">序号</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">姓名</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">联系方式</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">性别</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">居住地址</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">民族</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">人员类型</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredResidents.map((item, idx) => (
+                  <tr key={item.id} className={idx % 2 === 1 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{idx + 1}</td>
+                    <td className="px-4 py-3 text-sm text-gray-800 border-b border-gray-200">{item.name}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.phone}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.gender}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.address}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.nation}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-200">{item.type}</td>
+                    <td className="px-4 py-3 text-sm border-b border-gray-200">
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">编辑</button>
+                        <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">删除</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <span className="text-sm text-gray-600">前往</span>
-          <input
-            type="number"
-            value={currentPage}
-            onChange={(e) => setCurrentPage(Number(e.target.value))}
-            className="w-14 px-2 py-1.5 border border-gray-300 rounded text-sm text-center"
-          />
-          <span className="text-sm text-gray-600">页</span>
+
+          {/* 分页 */}
+          <div className="flex items-center justify-end gap-3 p-4 border-t border-gray-200">
+            <span className="text-sm text-gray-600">共 {filteredResidents.length} 条</span>
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className="px-3 py-1.5 border border-gray-300 rounded text-sm"
+            >
+              <option value={10}>10条/页</option>
+              <option value={20}>20条/页</option>
+              <option value={50}>50条/页</option>
+              <option value={100}>100条/页</option>
+            </select>
+            <div className="flex items-center gap-1">
+              <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                &lt;
+              </button>
+              {[1, 2, 3, 4, 5, 6, '...', 2197].map((page, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => typeof page === 'number' && setCurrentPage(page)}
+                  className={`px-3 py-1 rounded text-sm ${
+                    page === currentPage
+                      ? 'bg-blue-500 text-white'
+                      : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                &gt;
+              </button>
+            </div>
+            <span className="text-sm text-gray-600">前往</span>
+            <input
+              type="number"
+              value={currentPage}
+              onChange={(e) => setCurrentPage(Number(e.target.value))}
+              className="w-14 px-2 py-1.5 border border-gray-300 rounded text-sm text-center"
+            />
+            <span className="text-sm text-gray-600">页</span>
+          </div>
         </div>
       </div>
 
