@@ -384,7 +384,6 @@ const Dashboard: React.FC = () => {
         {/* 社区感知 */}
         <div>
           <h2 className="text-xl font-bold text-gray-800 mb-4">社区感知</h2>
-          
           {/* 报警统计卡片 */}
           <div className="grid grid-cols-4 gap-4 mb-4">
             {alarmData.map((item, idx) => (
@@ -666,9 +665,9 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* 右侧栏：待处理报警和通知消息 */}
-      <div className="w-[320px] bg-white p-5 flex flex-col gap-5 overflow-auto">
+      <div className="w-[320px] bg-white p-5 flex flex-col gap-5 h-full">
         {/* 待处理报警 */}
-        <div>
+        <div className="flex-shrink-0">
           <h2 className="text-lg font-bold text-gray-800 mb-4">待处理报警</h2>
           <div className="space-y-3">
             {pendingAlarms.map((alarm) => (
@@ -700,12 +699,12 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* 通知消息 */}
-        <div className="bg-gray-50 rounded-xl p-4">
-          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <div className="bg-gray-50 rounded-xl p-4 flex flex-col flex-1 overflow-hidden">
+          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2 flex-shrink-0">
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
             通知消息
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-3 overflow-y-auto flex-1 pr-1">
             {noticeMessages.map((msg) => {
               const config = alarmLevelConfig[msg.level as keyof typeof alarmLevelConfig];
               const timeoutResult = checkTimeout(msg.level, msg.alarmTime, msg.processTime);
