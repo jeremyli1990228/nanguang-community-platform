@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { MapPin, Users, Building2, Briefcase, Info, ArrowRight, Home, Thermometer, Droplets, Wind, Zap, X, Upload } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -146,12 +146,60 @@ const Dashboard: React.FC = () => {
     { id: 5, type: '用电设备离线报警', time: '2026-05-20 11:52:45' },
   ];
 
+  // 长者服务状态
+  const [selectedElderIndex, setSelectedElderIndex] = useState(0);
+  const [dataType, setDataType] = useState<'electricity' | 'water'>('electricity');
+  
+  // 每小时的时间标签
+  const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+  
+  // 长者智能手环数据
   const elderHealthData = [
-    { name: '张启哲', bloodPressure: '136/74mmHg', heartRate: '98次/分', steps: '-' },
-    { name: '戚道琳', bloodPressure: '-', heartRate: '80', steps: '-' },
-    { name: '李国安', bloodPressure: '-', heartRate: '80', steps: '-' },
-    { name: '邹亚锋', bloodPressure: '-', heartRate: '-', steps: '-' },
+    { name: '张启哲', bloodPressure: '136/74mmHg', heartRate: '98次/分', steps: '2345' },
+    { name: '戚道琳', bloodPressure: '128/72mmHg', heartRate: '80', steps: '1890' },
+    { name: '李国安', bloodPressure: '140/85mmHg', heartRate: '85', steps: '3200' },
+    { name: '邹亚锋', bloodPressure: '115/70mmHg', heartRate: '78', steps: '1560' },
   ];
+  
+  // 生成每小时用电/用水数据的函数
+  const generateHourlyData = (elderIndex: number, type: 'electricity' | 'water') => {
+    // 根据长者索引和数据类型生成不同的数据模式
+    const baseMultiplier = elderIndex + 1;
+    const typeMultiplier = type === 'electricity' ? 1 : 0.5;
+    
+    // 张启哲有超过4小时无数据的情况
+    if (elderIndex === 0) {
+      return hours.map((hour, index) => {
+        // 假设2-5点没有数据
+        if (index >= 2 && index <= 5) {
+          return { time: hour, value: 0 };
+        }
+        return { 
+          time: hour, 
+          value: Math.max(0, (Math.sin(index * 0.3) + 1.5) * baseMultiplier * typeMultiplier) 
+        };
+      });
+    }
+    
+    return hours.map((hour, index) => ({
+      time: hour,
+      value: Math.max(0, (Math.sin(index * 0.3) + 1.5) * baseMultiplier * typeMultiplier)
+    }));
+  };
+  
+  // 检查是否有超过4小时无数据的情况
+  const hasNoDataAlert = (data: { time: string; value: number }[]) => {
+    let noDataCount = 0;
+    for (const item of data) {
+      if (item.value === 0) {
+        noDataCount++;
+        if (noDataCount >= 4) return true;
+      } else {
+        noDataCount = 0;
+      }
+    }
+    return false;
+  };
 
   const populationData = [
     { id: 1, name: '戚道琳', phone: '181****1215', gender: '女', address: '广东省深圳市南山区南山街道南...', nation: '汉族', type: '高龄老人', isShenzhenHukou: true },
@@ -440,18 +488,71 @@ const Dashboard: React.FC = () => {
             <div className="bg-white rounded-lg p-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-1">
-                  <button className="px-3 py-1 bg-gray-100 rounded text-sm font-medium">用电量</button>
-                  <button className="px-3 py-1 bg-gray-50 rounded text-sm text-gray-500">用水量</button>
+                  <button 
+                    className={`px-3 py-1 rounded text-sm font-medium transition-colors ${dataType === 'electricity' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    onClick={() => setDataType('electricity')}
+                  >
+                    用电量
+                  </button>
+                  <button 
+                    className={`px-3 py-1 rounded text-sm font-medium transition-colors ${dataType === 'water' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    onClick={() => setDataType('water')}
+                  >
+                    用水量
+                  </button>
                 </div>
-                <button className="text-sm text-blue-500">查看更多 &gt;</button>
+                <div className="text-sm text-gray-600">当前查看: {elderHealthData[selectedElderIndex].name}</div>
               </div>
-              <div className="flex flex-col items-center justify-center py-8">
-                <img 
-                  src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=3D打开的纸箱灰色简约风格&image_size=square" 
-                  alt="暂无数据" 
-                  className="w-32 h-32 mb-3"
-                />
-                <div className="text-sm text-gray-500">暂无用电量</div>
+              
+              {/* 告警提示 */}
+              {hasNoDataAlert(generateHourlyData(selectedElderIndex, dataType)) && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-red-600">⚠️ 告警：该长者超过4小时无{dataType === 'electricity' ? '用电' : '用水'}数据，请确认安全</span>
+                </div>
+              )}
+              
+              {/* 折线图 */}
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={generateHourlyData(selectedElderIndex, dataType)}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis 
+                      dataKey="time" 
+                      stroke="#6b7280" 
+                      tick={{ fontSize: 11 }}
+                      interval={3}
+                    />
+                    <YAxis 
+                      stroke="#6b7280" 
+                      tick={{ fontSize: 11 }}
+                      label={{ 
+                        value: dataType === 'electricity' ? '用电量(kWh)' : '用水量(m³)', 
+                        angle: -90, 
+                        position: 'insideLeft',
+                        style: { fontSize: 11 }
+                      }}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#fff', 
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        fontSize: 12
+                      }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                    <Line 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke={dataType === 'electricity' ? '#3b82f6' : '#10b981'} 
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                      activeDot={{ r: 5 }}
+                      name={dataType === 'electricity' ? '用电量' : '用水量'}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </div>
 
@@ -469,19 +570,58 @@ const Dashboard: React.FC = () => {
                       <th className="px-3 py-2 text-left font-medium text-gray-700 border-b">血压</th>
                       <th className="px-3 py-2 text-left font-medium text-gray-700 border-b">心率</th>
                       <th className="px-3 py-2 text-left font-medium text-gray-700 border-b">计步</th>
+                      <th className="px-3 py-2 text-left font-medium text-gray-700 border-b">状态</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {elderHealthData.map((elder, idx) => (
-                      <tr key={idx} className={idx < elderHealthData.length - 1 ? 'border-b' : ''}>
-                        <td className="px-3 py-2 text-gray-800">{elder.name}</td>
-                        <td className="px-3 py-2 text-gray-600">{elder.bloodPressure}</td>
-                        <td className="px-3 py-2 text-gray-600">{elder.heartRate}</td>
-                        <td className="px-3 py-2 text-gray-600">{elder.steps}</td>
-                      </tr>
-                    ))}
+                    {elderHealthData.map((elder, idx) => {
+                      const hasAlert = hasNoDataAlert(generateHourlyData(idx, dataType));
+                      return (
+                        <tr 
+                          key={idx} 
+                          className={`${idx < elderHealthData.length - 1 ? 'border-b' : ''} ${selectedElderIndex === idx ? 'bg-blue-50' : ''} hover:bg-gray-50 cursor-pointer transition-colors`}
+                          onClick={() => setSelectedElderIndex(idx)}
+                        >
+                          <td className="px-3 py-2 text-gray-800">
+                            <div className="flex items-center gap-2">
+                              {selectedElderIndex === idx && (
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              )}
+                              {elder.name}
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 text-gray-600">{elder.bloodPressure}</td>
+                          <td className="px-3 py-2 text-gray-600">{elder.heartRate}</td>
+                          <td className="px-3 py-2 text-gray-600">{elder.steps}</td>
+                          <td className="px-3 py-2">
+                            {hasAlert ? (
+                              <span className="px-2 py-1 bg-red-100 text-red-600 rounded text-xs">
+                                异常
+                              </span>
+                            ) : (
+                              <span className="px-2 py-1 bg-green-100 text-green-600 rounded text-xs">
+                                正常
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
+              </div>
+              
+              {/* 被选中长者的详细信息 */}
+              <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                <div className="text-sm font-medium text-gray-700 mb-2">
+                  {elderHealthData[selectedElderIndex].name} - 详细信息
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                  <div>血压: {elderHealthData[selectedElderIndex].bloodPressure}</div>
+                  <div>心率: {elderHealthData[selectedElderIndex].heartRate}</div>
+                  <div>今日步数: {elderHealthData[selectedElderIndex].steps}</div>
+                  <div>最后更新: 刚刚</div>
+                </div>
               </div>
             </div>
           </div>
