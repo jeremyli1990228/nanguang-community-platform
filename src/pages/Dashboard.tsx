@@ -138,12 +138,49 @@ const Dashboard: React.FC = () => {
     input.click();
   };
 
+  // 报警等级配置
+  const alarmLevelConfig = {
+    red: { name: '红色报警', timeoutHours: 0, label: '立即处理', color: 'bg-red-500', textColor: 'text-red-600', bgColor: 'bg-red-100' },
+    orange: { name: '橙色报警', timeoutHours: 4, label: '4小时内处理', color: 'bg-orange-500', textColor: 'text-orange-600', bgColor: 'bg-orange-100' },
+    yellow: { name: '黄色报警', timeoutHours: 24, label: '1天内处理', color: 'bg-yellow-500', textColor: 'text-yellow-600', bgColor: 'bg-yellow-100' },
+    blue: { name: '蓝色报警', timeoutHours: 48, label: '2天内处理', color: 'bg-blue-500', textColor: 'text-blue-600', bgColor: 'bg-blue-100' },
+  };
+  
+  // 判断处理是否超时
+  const checkTimeout = (alarmLevel: string, alarmTime: string, processTime: string) => {
+    const alarmDate = new Date(alarmTime);
+    const processDate = new Date(processTime);
+    const config = alarmLevelConfig[alarmLevel as keyof typeof alarmLevelConfig];
+    
+    if (!config) return { timeout: false, duration: '未知', status: '未知' };
+    
+    const diffHours = (processDate.getTime() - alarmDate.getTime()) / (1000 * 60 * 60);
+    const isTimeout = diffHours > config.timeoutHours;
+    
+    let status = '未超时';
+    if (isTimeout) {
+      status = '已超时';
+    }
+    
+    let duration = '';
+    if (diffHours < 1) {
+      duration = `${Math.round(diffHours * 60)}分钟`;
+    } else if (diffHours < 24) {
+      duration = `${Math.round(diffHours)}小时`;
+    } else {
+      duration = `${Math.round(diffHours / 24)}天`;
+    }
+    
+    return { timeout: isTimeout, duration, status };
+  };
+  
+  // 通知消息（已处理的报警）
   const noticeMessages = [
-    { id: 1, type: '用电设备离线报警', time: '2026-05-20 11:52:45' },
-    { id: 2, type: '用电设备离线报警', time: '2026-05-20 11:52:45' },
-    { id: 3, type: '用电设备离线报警', time: '2026-05-20 11:52:45' },
-    { id: 4, type: '用电设备离线报警', time: '2026-05-20 11:52:45' },
-    { id: 5, type: '用电设备离线报警', time: '2026-05-20 11:52:45' },
+    { id: 1, type: '用电设备离线报警', level: 'orange', alarmTime: '2026-05-20 10:00:00', processTime: '2026-05-20 11:52:45', processPerson: '张伟' },
+    { id: 2, type: '故障电弧报警', level: 'red', alarmTime: '2026-05-20 09:30:00', processTime: '2026-05-20 09:35:12', processPerson: '李明' },
+    { id: 3, type: '用电设备离线报警', level: 'blue', alarmTime: '2026-05-18 14:20:00', processTime: '2026-05-20 11:52:45', processPerson: '王芳' },
+    { id: 4, type: '烟雾报警', level: 'yellow', alarmTime: '2026-05-19 16:45:00', processTime: '2026-05-19 18:30:00', processPerson: '赵强' },
+    { id: 5, type: '用电设备离线报警', level: 'orange', alarmTime: '2026-05-20 06:00:00', processTime: '2026-05-20 11:52:45', processPerson: '张伟' },
   ];
 
   // 长者服务状态
@@ -666,17 +703,37 @@ const Dashboard: React.FC = () => {
         <div>
           <h2 className="text-lg font-bold text-gray-800 mb-4">通知消息</h2>
           <div className="space-y-3">
-            {noticeMessages.map((msg) => (
-              <div key={msg.id} className="border-b pb-2">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-gray-800">{msg.type}</span>
+            {noticeMessages.map((msg) => {
+              const config = alarmLevelConfig[msg.level as keyof typeof alarmLevelConfig];
+              const timeoutResult = checkTimeout(msg.level, msg.alarmTime, msg.processTime);
+              
+              return (
+                <div key={msg.id} className="border-b pb-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-gray-800">{msg.type}</span>
+                    <span className={`px-2 py-0.5 ${config?.bgColor || 'bg-gray-100'} ${config?.textColor || 'text-gray-600'} text-xs rounded`}>
+                      {config?.name || '未知'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded">已处理</span>
+                    <span className="text-xs text-gray-500">报警时间: {msg.alarmTime}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3">
+                      <span className="text-gray-500">处理人: {msg.processPerson}</span>
+                      <span className="text-gray-500">处理耗时: {timeoutResult.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-500">时限: {config?.label || '-'}</span>
+                      <span className={`px-2 py-0.5 rounded text-xs ${timeoutResult.timeout ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                        {timeoutResult.status}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded">报警</span>
-                  <span className="text-xs text-gray-500">{msg.time}</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
