@@ -181,6 +181,16 @@ const Dashboard: React.FC = () => {
     { id: 3, type: '用电设备离线报警', level: 'blue', alarmTime: '2026-05-18 14:20:00', processTime: '2026-05-20 11:52:45', processPerson: '王芳' },
     { id: 4, type: '烟雾报警', level: 'yellow', alarmTime: '2026-05-19 16:45:00', processTime: '2026-05-19 18:30:00', processPerson: '赵强' },
     { id: 5, type: '用电设备离线报警', level: 'orange', alarmTime: '2026-05-20 06:00:00', processTime: '2026-05-20 11:52:45', processPerson: '张伟' },
+    { id: 6, type: '温度异常报警', level: 'yellow', alarmTime: '2026-05-19 14:30:00', processTime: '2026-05-19 15:20:00', processPerson: '孙丽' },
+    { id: 7, type: '燃气泄漏报警', level: 'red', alarmTime: '2026-05-18 08:15:00', processTime: '2026-05-18 08:25:00', processPerson: '周杰' },
+    { id: 8, type: '门禁异常报警', level: 'blue', alarmTime: '2026-05-17 22:00:00', processTime: '2026-05-18 09:00:00', processPerson: '吴磊' },
+    { id: 9, type: '消防水压报警', level: 'orange', alarmTime: '2026-05-17 15:30:00', processTime: '2026-05-17 16:45:00', processPerson: '郑薇' },
+    { id: 10, type: '烟雾报警', level: 'yellow', alarmTime: '2026-05-16 11:20:00', processTime: '2026-05-16 12:30:00', processPerson: '陈晨' },
+    { id: 11, type: '用电设备离线报警', level: 'orange', alarmTime: '2026-05-16 07:45:00', processTime: '2026-05-16 09:00:00', processPerson: '张伟' },
+    { id: 12, type: '故障电弧报警', level: 'red', alarmTime: '2026-05-15 18:00:00', processTime: '2026-05-15 18:10:00', processPerson: '李明' },
+    { id: 13, type: '温度异常报警', level: 'yellow', alarmTime: '2026-05-15 13:20:00', processTime: '2026-05-15 14:30:00', processPerson: '孙丽' },
+    { id: 14, type: '门禁异常报警', level: 'blue', alarmTime: '2026-05-14 23:30:00', processTime: '2026-05-15 08:45:00', processPerson: '吴磊' },
+    { id: 15, type: '燃气泄漏报警', level: 'red', alarmTime: '2026-05-14 09:10:00', processTime: '2026-05-14 09:20:00', processPerson: '周杰' },
   ];
 
   // 长者服务状态
@@ -262,7 +272,7 @@ const Dashboard: React.FC = () => {
   const nonHukouData = populationData.filter(item => !item.isShenzhenHukou);
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full overflow-hidden">
       {/* 左侧栏：社区信息一览 */}
       <div className="w-[380px] bg-white p-5 flex flex-col gap-5 overflow-auto">
         <div>
@@ -704,7 +714,13 @@ const Dashboard: React.FC = () => {
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
             通知消息
           </h2>
-          <div className="space-y-3 overflow-y-auto flex-1 pr-1">
+          <div 
+            className="space-y-3 overflow-y-auto flex-1 pr-2"
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#94a3b8 #f1f5f9'
+            }}
+          >
             {noticeMessages.map((msg) => {
               const config = alarmLevelConfig[msg.level as keyof typeof alarmLevelConfig];
               const timeoutResult = checkTimeout(msg.level, msg.alarmTime, msg.processTime);
