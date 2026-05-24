@@ -700,35 +700,50 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* 通知消息 */}
-        <div>
-          <h2 className="text-lg font-bold text-gray-800 mb-4">通知消息</h2>
+        <div className="bg-gray-50 rounded-xl p-4">
+          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            通知消息
+          </h2>
           <div className="space-y-3">
             {noticeMessages.map((msg) => {
               const config = alarmLevelConfig[msg.level as keyof typeof alarmLevelConfig];
               const timeoutResult = checkTimeout(msg.level, msg.alarmTime, msg.processTime);
               
               return (
-                <div key={msg.id} className="border-b pb-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-800">{msg.type}</span>
-                    <span className={`px-2 py-0.5 ${config?.bgColor || 'bg-gray-100'} ${config?.textColor || 'text-gray-600'} text-xs rounded`}>
-                      {config?.name || '未知'}
+                <div key={msg.id} className="bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <span className="text-sm font-medium text-gray-800">{msg.type}</span>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`px-2 py-0.5 ${config?.bgColor || 'bg-gray-100'} ${config?.textColor || 'text-gray-600'} text-xs rounded-full font-medium`}>
+                          {config?.name || '未知'}
+                        </span>
+                        <span className="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded-full">已处理</span>
+                      </div>
+                    </div>
+                    <span className={`px-2 py-1 rounded-lg text-xs font-medium ${timeoutResult.timeout ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                      {timeoutResult.status}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded">已处理</span>
-                    <span className="text-xs text-gray-500">报警时间: {msg.alarmTime}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-3">
-                      <span className="text-gray-500">处理人: {msg.processPerson}</span>
-                      <span className="text-gray-500">处理耗时: {timeoutResult.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500">时限: {config?.label || '-'}</span>
-                      <span className={`px-2 py-0.5 rounded text-xs ${timeoutResult.timeout ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
-                        {timeoutResult.status}
-                      </span>
+                  <div className="border-t border-gray-100 pt-2 mt-2">
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center gap-1">
+                        <span className="text-gray-400">报警时间:</span>
+                        <span className="text-gray-600">{msg.alarmTime}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-gray-400">处理人:</span>
+                        <span className="text-gray-600">{msg.processPerson}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-gray-400">处理耗时:</span>
+                        <span className="text-gray-600">{timeoutResult.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-gray-400">时限:</span>
+                        <span className={`${config?.textColor || 'text-gray-600'} font-medium`}>{config?.label || '-'}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
