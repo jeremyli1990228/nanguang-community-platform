@@ -456,9 +456,9 @@ const Dashboard: React.FC = () => {
                 <div className="text-sm">总数：{item.total}</div>
                 <div className="text-sm">已处理数量：{item.processed}</div>
                 {/* 悬停提示 */}
-                <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 bg-gray-800 text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-gray-800 text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                   {item.hoverTip}
-                  <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+                  <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-gray-800 rotate-45"></div>
                 </div>
               </div>
             ))}
