@@ -416,7 +416,30 @@ const Dashboard: React.FC = () => {
       <div className="flex-1 bg-gray-100 p-5 flex flex-col gap-5 overflow-auto">
         {/* 社区感知 */}
         <div>
-          <h2 className="text-xl font-bold text-gray-800 mb-4">社区感知</h2>
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-xl font-bold text-gray-800">社区感知</h2>
+            <div className="relative group">
+              <Info className="h-5 w-5 text-gray-400 cursor-help hover:text-gray-600 transition-colors" />
+              <div className="absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 shadow-lg">
+                <div className="space-y-2">
+                  <div className="font-medium text-sm">数据说明</div>
+                  <div className="border-t border-gray-700 pt-2">
+                    <div className="text-gray-300">数据字段：</div>
+                    <div className="text-gray-400 text-[11px]">红色报警、橙色报警、黄色报警、蓝色报警、当前温度、当前湿度、当前雨量、当前风速、喷淋当前水压、消防栓当前水压</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-300">数据来源：</div>
+                    <div className="text-gray-400 text-[11px]">第三方接口对接</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-300">更新频率：</div>
+                    <div className="text-gray-400 text-[11px]">实时</div>
+                  </div>
+                </div>
+                <div className="absolute -top-1.5 left-3 w-2 h-2 bg-gray-800 rotate-45"></div>
+              </div>
+            </div>
+          </div>
           {/* 报警统计卡片 */}
           <div className="grid grid-cols-4 gap-4 mb-4">
             {alarmData.map((item, idx) => (
