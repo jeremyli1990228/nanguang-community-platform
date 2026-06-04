@@ -420,12 +420,12 @@ const Dashboard: React.FC = () => {
             <h2 className="text-xl font-bold text-gray-800">社区感知</h2>
             <div className="relative group">
               <Info className="h-5 w-5 text-gray-400 cursor-help hover:text-gray-600 transition-colors" />
-              <div className="absolute right-0 top-6 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-xl">
+              <div className="absolute left-0 top-6 w-72 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-xl">
                 <div className="space-y-2">
                   <div className="font-medium text-sm">数据说明</div>
                   <div className="border-t border-gray-700 pt-2">
                     <div className="text-gray-300">数据字段：</div>
-                    <div className="text-gray-400 text-[11px]">红色报警、橙色报警、黄色报警、蓝色报警、当前温度、当前湿度、当前雨量、当前风速、喷淋当前水压、消防栓当前水压</div>
+                    <div className="text-gray-400 text-[11px] whitespace-pre-wrap">红色报警、橙色报警、黄色报警、蓝色报警、当前温度、当前湿度、当前雨量、当前风速、喷淋当前水压、消防栓当前水压</div>
                   </div>
                   <div>
                     <div className="text-gray-300">数据来源：</div>
@@ -436,7 +436,7 @@ const Dashboard: React.FC = () => {
                     <div className="text-gray-400 text-[11px]">实时</div>
                   </div>
                 </div>
-                <div className="absolute -top-1.5 right-3 w-2 h-2 bg-gray-800 rotate-45"></div>
+                <div className="absolute -top-1.5 left-3 w-2 h-2 bg-gray-800 rotate-45"></div>
               </div>
             </div>
           </div>
@@ -456,9 +456,9 @@ const Dashboard: React.FC = () => {
                 <div className="text-sm">总数：{item.total}</div>
                 <div className="text-sm">已处理数量：{item.processed}</div>
                 {/* 悬停提示 */}
-                <div className="absolute left-1/2 -translate-x-1/2 -top-12 bg-gray-800 text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 bg-gray-800 text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                   {item.hoverTip}
-                  <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+                  <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-800 rotate-45"></div>
                 </div>
               </div>
             ))}
