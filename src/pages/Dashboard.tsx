@@ -420,7 +420,7 @@ const Dashboard: React.FC = () => {
             <h2 className="text-xl font-bold text-gray-800">社区感知</h2>
             <div className="relative group">
               <Info className="h-5 w-5 text-gray-400 cursor-help hover:text-gray-600 transition-colors" />
-              <div className="absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 shadow-lg">
+              <div className="absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20 shadow-lg">
                 <div className="space-y-2">
                   <div className="font-medium text-sm">数据说明</div>
                   <div className="border-t border-gray-700 pt-2">
