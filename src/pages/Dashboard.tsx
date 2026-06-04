@@ -416,11 +416,11 @@ const Dashboard: React.FC = () => {
       <div className="flex-1 bg-gray-100 p-5 flex flex-col gap-5 overflow-auto">
         {/* 社区感知 */}
         <div>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 relative z-30">
             <h2 className="text-xl font-bold text-gray-800">社区感知</h2>
             <div className="relative group">
               <Info className="h-5 w-5 text-gray-400 cursor-help hover:text-gray-600 transition-colors" />
-              <div className="absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20 shadow-lg">
+              <div className="absolute right-0 top-6 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-xl">
                 <div className="space-y-2">
                   <div className="font-medium text-sm">数据说明</div>
                   <div className="border-t border-gray-700 pt-2">
@@ -436,7 +436,7 @@ const Dashboard: React.FC = () => {
                     <div className="text-gray-400 text-[11px]">实时</div>
                   </div>
                 </div>
-                <div className="absolute -top-1.5 left-3 w-2 h-2 bg-gray-800 rotate-45"></div>
+                <div className="absolute -top-1.5 right-3 w-2 h-2 bg-gray-800 rotate-45"></div>
               </div>
             </div>
           </div>
