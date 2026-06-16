@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>南光社区治理平台</title>
+    <script>
+      // 重定向到 index.html
+      (function() {
+        var path = window.location.pathname;
+        var search = window.location.search;
+        var hash = window.location.hash;
+        window.location.replace(
+          '/nanguang-community-platform/' +
+          '?p=' + encodeURIComponent(path) +
+          (search ? '&s=' + encodeURIComponent(search) : '') +
+          (hash ? '&h=' + encodeURIComponent(hash) : '')
+        );
+      })();
+    </script>
+  </head>
+  <body>
+    正在重定向...
+  </body>
+</html>
